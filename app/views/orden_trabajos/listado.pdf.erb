@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Listado de trabajos en el taller</title>
+  <style>
+    body {
+      font-family: "Helvetica", sans-serif;
+      font-size: 12px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 15px;
+      color: #222;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #999;
+      padding: 6px;
+      text-align: left;
+    }
+    th {
+      background-color: #e0e0e0;
+      font-weight: bold;
+    }
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    .center { text-align: center; }
+  </style>
+</head>
+<body>
+  <h2>Listado de trabajos en el Taller</h2>
+  <p><strong>Fecha de generación:</strong> <%= Time.zone.now.strftime("%d/%m/%Y %H:%M") %></p>
+  <p><strong>Total de registros:</strong> <%= @orden_trabajos.count %></p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>OT</th>
+        <th>Cliente</th>
+        <th>Producto</th>
+        <th>Cantidad</th>
+        <th>Observaciones</th>
+        <th>Estado actual</th>
+        <th>Procesos</th>
+        <th>Fecha entrada</th>
+        <th>Fecha entrega</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @orden_trabajos.each do |orden_trabajo| %>
+        <tr>
+          <td class="center"><%= orden_trabajo.trnum %></td>
+          <td><%= orden_trabajo.clinom %></td>
+          <td><%= orden_trabajo.nomprod %></td>
+          <td class="center"><%= orden_trabajo.trcan %></td>
+          <td><%= truncate(orden_trabajo.observaciones, length: 60) %></td>
+          <td><%= orden_trabajo.estado_actual %></td>
+          <td><%= orden_trabajo.procesos %></td>
+          <td class="center"><%= orden_trabajo.trcar.try(:strftime, "%d/%m/%Y") %></td>
+          <td class="center"><%= orden_trabajo.deadline.try(:strftime, "%d/%m/%Y") %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</body>
+</html>

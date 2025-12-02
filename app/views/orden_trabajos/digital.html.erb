@@ -1,0 +1,116 @@
+<!-- Encabezado principal -->
+<div class="d-flex justify-content-around bg-primary sticky-top my-3 text-white" style="z-index: 900;">
+  <div>
+    <h1 class="mt-1"><strong>Kónica Color</strong></h1>
+  </div>
+  <div>
+    <h1 class="mt-1"><strong>Kónica Monocolor</strong></h1>
+  </div>
+</div>
+
+<!-- Contenedor principal -->
+<div class="d-flex justify-content-around">
+  <!-- 🟦 Kónica Color -->
+  <div class="container">
+    <table class="table table-striped">
+      <thead class="bg-info text-white">
+        <tr>
+          <th><h4 class="font-weight-bold text-white">OT</h4></th>
+          <th><h4 class="font-weight-bold text-white">Cliente</h4></th>
+          <th><h4 class="font-weight-bold text-white">Producto</h4></th>
+          <th><h4 class="font-weight-bold text-white">Observación</h4></th>
+          <th><h4 class="font-weight-bold text-white">Fecha límite</h4></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @orden_trabajos.each do |orden_trabajo| %>
+          <% if orden_trabajo.estado_actual == "Impresión" && cadenatovector(orden_trabajo.procesos).include?("Ko") %>
+            <tr>
+              <%# Columna OT con color según prioridad %>
+              <% case orden_trabajo.priority
+                 when "Alta" %>
+                   <td style="background-color: #FF0000;">
+                     <strong><%= orden_trabajo.trnum %></strong>
+                   </td>
+                 <% when "Media" %>
+                   <td style="background-color: #FFFF00;">
+                     <strong><%= orden_trabajo.trnum %></strong>
+                   </td>
+                 <% else %>
+                   <td style="background-color: #7CFC00;">
+                     <strong><%= orden_trabajo.trnum %></strong>
+                   </td>
+              <% end %>
+
+              <td><%= orden_trabajo.clinom %></td>
+              <td><%= orden_trabajo.nomprod.first(20) %></td>
+              <td><%= truncate(orden_trabajo.observaciones, length: 50) %></td>
+              <td><%= orden_trabajo.deadline.try(:strftime, "%d-%m-%Y") %></td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 🟨 Kónica Monocolor -->
+  <div class="container">
+    <table class="table table-striped">
+      <thead class="bg-info text-white">
+        <tr>
+          <th><h4 class="font-weight-bold text-white">OT</h4></th>
+          <th><h4 class="font-weight-bold text-white">Cliente</h4></th>
+          <th><h4 class="font-weight-bold text-white">Producto</h4></th>
+          <th><h4 class="font-weight-bold text-white">Observación</h4></th>
+          <th><h4 class="font-weight-bold text-white">Fecha límite</h4></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @orden_trabajos.each do |orden_trabajo| %>
+          <% if orden_trabajo.estado_actual == "Impresión" && cadenatovector(orden_trabajo.procesos).include?("Xe") %>
+            <tr>
+              <%# Columna OT con color según prioridad %>
+              <% case orden_trabajo.priority
+                 when "Alta" %>
+                   <td style="background-color: #FF0000;">
+                     <strong><%= orden_trabajo.trnum %></strong>
+                   </td>
+                 <% when "Media" %>
+                   <td style="background-color: #FFFF00;">
+                     <strong><%= orden_trabajo.trnum %></strong>
+                   </td>
+                 <% else %>
+                   <td style="background-color: #7CFC00;">
+                     <strong><%= orden_trabajo.trnum %></strong>
+                   </td>
+              <% end %>
+
+              <td><%= orden_trabajo.clinom %></td>
+              <td><%= orden_trabajo.nomprod.first(20) %></td>
+              <td><%= truncate(orden_trabajo.observaciones, length: 50) %></td>
+              <td><%= orden_trabajo.deadline.try(:strftime, "%d-%m-%Y") %></td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ⚙️ Auto-scroll y redirección -->
+<script>
+  // Auto-scroll hacia abajo y luego arriba en loop
+  setInterval(function() {
+    $("html, body").animate({ scrollTop: $(document).height() }, 70000);
+    setTimeout(function() {
+      $("html, body").animate({ scrollTop: 0 }, 1);
+    }, 1);
+  }, 1);
+
+  // Redirección automática a los 25 segundos
+  setTimeout(() => {
+    window.location.href = "<%= digital_path %>";
+  }, 25000);
+</script>

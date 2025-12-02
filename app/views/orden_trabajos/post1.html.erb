@@ -1,0 +1,98 @@
+<!-- 🔹 Encabezado fijo -->
+<div class="d-flex justify-content-around bg-primary sticky-top my-3 text-white" style="z-index: 900;">
+
+  <div>
+    <h1 class="mt-1"><strong>Laminado</strong></h1>
+  </div>
+  <div>
+    <h1 class="mt-1"><strong>Buv</strong></h1>
+  </div>
+</div>
+
+<!-- 🔸 Contenedor principal -->
+<div class="d-flex justify-content-around flex-wrap">
+
+  <!-- 🟦 Tabla Laminado -->
+  <div class="container col-md-6">
+    <table class="table table-striped table-bordered shadow-sm">
+      <thead class="bg-info text-white">
+        <tr>
+          <th>OT</th>
+          <th>Cliente</th>
+          <th>Producto</th>
+          <th>Observación</th>
+          <th>Fecha límite</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @orden_trabajos.each do |orden_trabajo| %>
+          <% if orden_trabajo.estado_actual == "Terminación" && cadenatovector(orden_trabajo.procesos).include?("Lam") %>
+            <tr>
+              <% case orden_trabajo.priority
+                 when "Alta" %>
+                   <td style="background-color:#FF0000;"><strong><%= orden_trabajo.trnum %></strong></td>
+                 <% when "Media" %>
+                   <td style="background-color:#FFFF00;"><strong><%= orden_trabajo.trnum %></strong></td>
+                 <% else %>
+                   <td style="background-color:#7CFC00;"><strong><%= orden_trabajo.trnum %></strong></td>
+              <% end %>
+              <td><%= orden_trabajo.clinom %></td>
+              <td><%= orden_trabajo.nomprod.first(20) %></td>
+              <td><%= truncate(orden_trabajo.observaciones, length: 50) %></td>
+              <td><strong><%= orden_trabajo.deadline.try(:strftime, "%d-%m-%Y") %></strong></td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 🟨 Tabla Buv -->
+  <div class="container col-md-6">
+    <table class="table table-striped table-bordered shadow-sm">
+      <thead class="bg-info text-white">
+        <tr>
+          <th>OT</th>
+          <th>Cliente</th>
+          <th>Producto</th>
+          <th>Observación</th>
+          <th>Fecha límite</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @orden_trabajos.each do |orden_trabajo| %>
+          <% if orden_trabajo.estado_actual == "Terminación" && cadenatovector(orden_trabajo.procesos).include?("Buv") %>
+            <tr>
+              <% case orden_trabajo.priority
+                 when "Alta" %>
+                   <td style="background-color:#FF0000;"><strong><%= orden_trabajo.trnum %></strong></td>
+                 <% when "Media" %>
+                   <td style="background-color:#FFFF00;"><strong><%= orden_trabajo.trnum %></strong></td>
+                 <% else %>
+                   <td style="background-color:#7CFC00;"><strong><%= orden_trabajo.trnum %></strong></td>
+              <% end %>
+              <td><%= orden_trabajo.clinom %></td>
+              <td><%= orden_trabajo.nomprod.first(20) %></td>
+              <td><%= truncate(orden_trabajo.observaciones, length: 50) %></td>
+              <td><strong><%= orden_trabajo.deadline.try(:strftime, "%d-%m-%Y") %></strong></td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ⚙️ Auto-scroll y redirección -->
+<script>
+  // Scroll automático hacia abajo y luego hacia arriba
+  setInterval(() => {
+    window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+    setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 2000);
+  }, 20000);
+
+  // Redirección automática a los 25 segundos
+  setTimeout(() => {
+    window.location.href = "<%= post1_path %>";
+  }, 25000);
+</script>

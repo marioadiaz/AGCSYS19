@@ -1,0 +1,18 @@
+INTERFACES PARA CONSTRUIR
+
+Una interfaz que permita:
+1.- seleccionar Procesos (Maquinas)
+2.- seleccionar clientes (OT, CLIENTE,PAPEL, COLOR, OBSERVACION, FECHA LIMITE)
+3.- ordernar clientes de acuerdo a un criterio de prioridad
+4.- boton para imprimir a pdf
+
+MODIFICACION EN PLANILLA DE CONTROL
+
+*.- Agregar en la tabla la columna prioridad para que se pueda cambiar de color el boton del Copy -- OK
+*.- Hay un error en el Copy cuando se hace mas de una vez, se copian los anteriores
+*.- 
+
+MODIFICACION DE IMPORTACION EXCEL
+
+*.- Anular el log de errores -- OK
+*.- Verificar que no haya haya repetidos al importar

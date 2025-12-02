@@ -1,0 +1,45 @@
+<% if resultados.any? %>
+  <div class="table-responsive mt-3">
+    <table class="table table-hover table-bordered align-middle text-center">
+      <thead class="table-dark">
+        <tr>
+          <th>N° OT</th>
+          <th>Cliente</th>
+          <th>Producto</th>
+          <th>Cantidad</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% resultados.each do |ot| %>
+          <tr id="resultado_<%= ot.id %>">
+            <td>
+              <span class="badge bg-primary fs-6"><%= ot.trnum %></span>
+            </td>
+            <td class="fw-bold"><%= ot.clinom %></td>
+            <td><%= ot.nomprod&.truncate(40) %></td>
+            <td><%= number_with_delimiter(ot.trcan) %></td>
+            <td>
+              <%= button_to asignar_lista_orden_trabajo_path(ot),
+                    method: :patch,
+                    params: { lista: params[:lista] },
+                    class: "btn btn-success btn-sm",
+                    id: "btn_asignar_#{ot.id}" do %>
+                <i class="fa-solid fa-check"></i> Asignar
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+<% else %>
+
+  <div class="alert alert-warning mt-3 text-center" role="alert">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    No se encontraron resultados para esta búsqueda.
+  </div>
+
+<% end %>

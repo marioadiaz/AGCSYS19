@@ -1,0 +1,38 @@
+<h2 class="mb-4">Panel de Listas</h2>
+
+<div class="row align-items-end">
+  
+  <!-- Dropdown de Listas -->
+  <div class="col-md-4">
+    <%= form_with model: @orden_trabajo, url: orden_trabajos_path, local: true do |f| %>
+      <div class="mb-3">
+        <%= f.label :lista, "Listas", class: "form-label fw-bold" %>
+        <%= f.select :lista, @listas, {}, class: "form-select" %>
+      </div>
+     
+    <% end %>
+  </div>
+
+  <!-- Buscador dinámico -->
+  <div class="col-md-8" data-controller="buscar-ot">
+
+
+    <div class="input-group mb-3">
+      <input type="text"
+       class="form-control"
+       placeholder="Buscar N° OT o Cliente"
+       data-buscar-ot-target="input"
+       data-action="input->buscar-ot#buscar">
+
+    </div>
+  </div>
+  <div class="row">
+    <!-- Aquí se actualizarán los resultados -->
+      <div id="resultados_busqueda"
+       data-buscar-ot-target="resultados"
+       data-turbo-permanent></div>
+  </div>
+</div>
+
+
+

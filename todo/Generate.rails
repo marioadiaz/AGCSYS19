@@ -1,0 +1,56 @@
+rails new AGCSYS13 -d postgresql -c bootstrap
+cd AGCSYS13
+bin/rails db:create
+# Bootstrap + Popper
+yarn add bootstrap @popperjs/core
+
+# jQuery
+yarn add jquery
+
+# Font Awesome
+bin/importmap pin @fortawesome/fontawesome-free
+bin/importmap pin jquery
+bin/importmap pin bootstrap
+pin "jquery", to: "https://code.jquery.com/jquery-3.7.1.min.js"
+pin "bootstrap", to: "bootstrap.min.js", preload: true
+
+copiar la carpeta vendor del antiguo proyecto actualizado
+
+bin/rails generate scaffold OrdenTrabajo trnum:integer trcan:integer trcar:date cinom:string papel:string gramaje:integer colores:string pliego:integer nomprod:string fecentr:date cam10:string cam12:string cam24:string procesos:string observaciones:string estado_actual:string estado:boolean deadline:date priority:string lista:string campo1:string campo2:string campo3:string campo4:string campo5:string campo6:string campo7:string campo8:string
+
+
+  bin/rails db:migrate
+
+rails generate simple_form:install
+
+app/javascript/application.js
+
+// Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
+// app/assets/javascripts/application.js
+//= require jquery
+//= require bootstrap.bundle.min // O el nombre de tu archivo de Bootstrap
+//= require_tree .
+
+import "@hotwired/turbo-rails"
+import "controllers"
+
+import * as bootstrap from "bootstrap"
+import "@fortawesome/fontawesome-free"
+
+import "custom/multiselect"
+import "custom/scroll_top"
+
+import * as jquery from "jquery"
+
+import $ from "jquery"
+window.$ = $
+window.jQuery = $
+
+
+// Hacer que jQuery sea global (para plugins que lo requieran)
+window.$ = window.jQuery = jQuery
+
+document.addEventListener("turbo:load", () => {
+  console.log("✅ jQuery funcionando en Rails 8 con Importmap!");
+});
+

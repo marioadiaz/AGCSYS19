@@ -1,0 +1,251 @@
+1.- reestructuracion de rutas abreviadas y nuevos forms vinculados
+
+✅ config/routes.rb — versión híbrida optimizada
+Rails.application.routes.draw do
+  # 🏠 Página principal: lista de órdenes de trabajo
+  root to: "orden_trabajos#index"
+
+  # =========================================================
+  # 📦 ÓRDENES DE TRABAJO (REST completo + extras)
+  # =========================================================
+  resources :orden_trabajos do
+    collection do
+      # 🔁 Reordenamiento con drag & drop
+      get  :index_reorder
+      post :reorder
+
+      # 📅 Vistas específicas
+      get :proximo_vencer
+      get :planificacion_taller
+      get :planificacion_tallerPDF
+      get :nueva_ot
+
+      # 🖨️ Vistas post impresión
+      get :listado
+      get :offset1
+      get :offset2
+      get :digital
+      get :post1
+      get :post2
+      get :post3
+      get :post4
+      get :post5
+      get :post6
+      get :post7
+    end
+
+    # 🧩 Ruta miembro para copiar una OT
+    member do
+      get :copy
+    end
+  end
+
+  # =========================================================
+  # 📥 IMPORTACIÓN DESDE EXCEL
+  # =========================================================
+  resources :orden_trabajos_imports, only: [:new, :create]
+
+  # =========================================================
+  # 🧭 RUTAS “CORTAS” (alias legibles)
+  # =========================================================
+  # 🔸 Estas rutas son alias que apuntan a las acciones del mismo controlador
+  # 🔸 No generan conflictos porque tienen nombres distintos de los helpers Rails estándar
+
+  get "proximo_vencer",         to: "orden_trabajos#proximo_vencer",         as: :proximo_vencer_short
+  get "planificacion_taller",   to: "orden_trabajos#planificacion_taller",   as: :planificacion_taller_short
+  get "planificacion_tallerPDF",to: "orden_trabajos#planificacion_tallerPDF",as: :planificacion_tallerPDF_short
+  get "nueva_ot",               to: "orden_trabajos#nueva_ot",               as: :nueva_ot_short
+end
+
+
+🧩 Cómo usarlo
+Tenés dos formas válidas de llamar a las rutas en tus vistas:
+1️⃣ Forma REST oficial (más robusta)
+<%= link_to "Próximo a vencer", proximo_vencer_orden_trabajos_path %>
+
+2️⃣ Forma abreviada (alias)
+<%= link_to "Próximo a vencer", proximo_vencer_short_path %>
+
+Ambas apuntan al mismo método OrdenTrabajosController#proximo_vencer,
+pero la segunda tiene una URL más corta (/proximo_vencer en vez de /orden_trabajos/proximo_vencer).
+
+💡 Por qué esta versión es ideal
+✅ Mantiene todas las rutas RESTful agrupadas bajo orden_trabajos.
+✅ Evita duplicación o conflictos de helpers (as: distintos).
+✅ Te da la opción de usar URLs cortas en el menú de navegación, sin romper convenciones.
+✅ Compatible con tus vistas actuales (index, listado, proximo_vencer, etc.).
+✅ Escalable: si más adelante añadís controladores o módulos (por ejemplo, orden_trabajos_api), no choca con las rutas actuales.
+
+¿Querés que te deje el bloque <nav> de tu application.html.erb actualizado con estos nuevos alias (*_short_path), listo para pegar y probar?
+
+IMPRESION PANTALLAS
+
+POST1
+<!-- 🟦 Tabla Laminado -->
+<% if orden_trabajo.estado_actual == "Terminación" && cadenatovector(orden_trabajo.procesos).include?("Lam") %>
+<!-- 🟨 Tabla Buv -->
+<% if orden_trabajo.estado_actual == "Terminación" && cadenatovector(orden_trabajo.procesos).include?("Buv") %>
+
+POST2
+<!-- 🟦 Tabla Tipografía -->
+<% if orden_trabajo.estado_actual == "Terminación" && cadenatovector(orden_trabajo.procesos).include?("Tipografia") %>
+<!-- 🟨 Tabla Fidia -->
+<% if orden_trabajo.estado_actual == "Terminación" && cadenatovector(orden_trabajo.procesos).include?("Fidia") %>
+
+POST3
+<!-- 🟩 Tabla Baum -->
+<% if orden_trabajo.estado_actual == "Terminación" && cadenatovector(orden_trabajo.procesos).include?("Baum") %>
+<!-- 🟦 Tabla Renz -->
+<% if orden_trabajo.estado_actual == "Terminación" && cadenatovector(orden_trabajo.procesos).include?("Renz") %>
+
+POST4
+<!-- 🟩 Tabla Duplo -->
+<% if orden_trabajo.estado_actual == "Terminación" && cadenatovector(orden_trabajo.procesos).include?("Duplo") %>
+<!-- 🟨 Tabla Cosedora Hilo -->
+<% if orden_trabajo.estado_actual == "Terminación" && cadenatovector(orden_trabajo.procesos).include?("C.Hilo") %>
+<!-- 🟦 Tabla Binder -->
+<% if orden_trabajo.estado_actual == "Terminación" && cadenatovector(orden_trabajo.procesos).include?("Binder") %>
+
+POST5
+<!-- 🟩 Tabla Zechini -->
+<% if orden_trabajo.estado_actual == "Terminación" && cadenatovector(orden_trabajo.procesos).include?("Zechini") %>
+<!-- 🟨 Tabla Alzadora -->
+<% if orden_trabajo.estado_actual == "Terminación" && cadenatovector(orden_trabajo.procesos).include?("Alzadora") %>
+<!-- 🟦 Tabla Cos. Alambre -->
+<% if orden_trabajo.estado_actual == "Terminación" && cadenatovector(orden_trabajo.procesos).include?("C.Alambre") %>
+
+POST6
+<!-- 🟩 Tabla Guillotina -->
+<% if orden_trabajo.estado_actual == "Terminación" && cadenatovector(orden_trabajo.procesos).include?("Guillotina") %>
+<!-- 🟨 Tabla T-Manual -->
+<% if orden_trabajo.estado_actual == "Terminación" && cadenatovector(orden_trabajo.procesos).include?("T.Manual") %>
+<!-- 🟦 Tabla Otros -->
+<% if orden_trabajo.estado_actual == "Terminación" && cadenatovector(orden_trabajo.procesos).include?("Otros") %>
+
+DIGITAL
+<!-- 🟦 Kónica Color -->
+<% if orden_trabajo.estado_actual == "Impresión" && cadenatovector(orden_trabajo.procesos).include?("Ko") %>
+<!-- 🟨 Kónica Monocolor -->
+<% if orden_trabajo.estado_actual == "Impresión" && cadenatovector(orden_trabajo.procesos).include?("Xe") %>
+OFFSET1
+<!-- 🟦 Tabla SM -->
+<% if orden_trabajo.estado_actual == "Impresión" && cadenatovector(orden_trabajo.procesos).include?("SM") %>
+<!-- 🟨 Tabla PM -->
+<% if orden_trabajo.estado_actual == "Impresión" && cadenatovector(orden_trabajo.procesos).include?("PM") %>
+
+OFFSET2
+<!-- 🟦 Tabla GTO -->
+<% if cadenatovector(orden_trabajo.procesos).include?("GTO") %>
+<!-- 🟨 Tabla SORZ -->
+<% if cadenatovector(orden_trabajo.procesos).include?("SORZ") %>
+
+PLANIFICACION TALLER
+
+<% if estado == "en espera" &&!["Impresión", "Pendiente", "Terminación", "Empaque"].include?(orden_trabajo.estado_actual) %>
+
+<%= render partial: "proceso", locals: { proceso: "SM" } %>
+              
+<%= render partial: "proceso", locals: { proceso: "PM" } %>
+
+<%= render partial: "proceso", locals: { proceso: "GTO" } %>
+
+<%= render partial: "proceso", locals: { proceso: "Ko" } %>
+
+<%= render partial: "proceso", locals: { proceso: "Xe" } %>
+
+<%= render partial: "proceso", locals: { proceso: "SORZ" } %>
+
+<h1 class="m-3 bg-primary text-center p-2 text-white rounded">
+  <strong>TERMINACIÓN</strong>
+</h1>
+
+<!-- ============================
+     PROCESOS DE TERMINACIÓN
+     ============================ -->
+<% elsif estado == "LISTO" && orden_trabajo.estado_actual&.match?(/Impresión|Terminación/i) %>
+
+<%= render partial: "proceso", locals: { proceso: "Tipografia" } %>
+
+<%= render partial: "proceso", locals: { proceso: "Binder" } %>
+
+<%= render partial: "proceso", locals: { proceso: "Duplo" } %>
+
+<%= render partial: "proceso", locals: { proceso: "Lam" } %>
+
+<%= render partial: "proceso", locals: { proceso: "Zechini" } %>
+
+<%= render partial: "proceso", locals: { proceso: "Baum" } %>
+
+<%= render partial: "proceso", locals: { proceso: "Fidia" } %>
+
+<%= render partial: "proceso", locals: { proceso: "Buv" } %>
+
+<%= render partial: "proceso", locals: { proceso: "Renz" } %>
+
+✅ 5. Revisá la columna position en la base
+
+Abrí postgres:
+
+SELECT id, trnum, position FROM orden_trabajos
+ORDER BY position;
+
+
+Si todas las position son NULL → necesitás inicializarlas:
+
+OrdenTrabajo.order(:id).each_with_index do |ot, i|
+  ot.update(position: i + 1)
+end
+
+
+para la siguiente tabla: 
+
+create_table "orden_trabajos", force: :cascade do |t|
+    t.integer "trnum"
+    t.integer "trcan"
+    t.date "trcar"
+    t.string "clinom"
+    t.string "papel"
+    t.integer "gramaje"
+    t.string "colores"
+    t.integer "pliego"
+    t.string "nomprod"
+    t.date "fecentr"
+    t.string "cam10"
+    t.string "cam12"
+    t.string "cam24"
+    t.string "procesos"
+    t.string "observaciones"
+    t.string "estado_actual"
+    t.boolean "estado"
+    t.date "deadline"
+    t.string "priority"
+    t.string "lista"
+    t.string "campo1"
+    t.string "campo2"
+    t.string "campo3"
+    t.string "campo4"
+    t.string "campo5"
+    t.string "campo6"
+    t.string "campo7"
+    t.string "campo8"
+    t.integer "position"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["clinom"], name: "index_orden_trabajos_on_clinom"
+    t.index ["trnum"], name: "index_orden_trabajos_on_trnum"
+  end
+
+  un formulario que contenga un dropdown con los siguientes campos:  LIST = [
+    "CTP","Cortadora de Bobinas","Guillotina para Impresión","PM","SM 5 Cuerpos","SM 4 CUERPOS","GTO/QUICK","SORZ","Guillotina p/ Terminación",
+    "Digital","Laminadora Automática","Laminadora Manual","Barnizadora","Minerva Grande","Minerva Chica",
+    "Plana","Eterna","Tareas Manuales","Dobladora","Horizon","Fidia","Duplo","Binder","Encuadernación","Zechini","Perforadora","Anilladora Automática",
+    "Anilladora Manual","Tareas de Mantenimiento"].freeze
+
+  al lado un buscador de ordenes de trabajo (de acuerdo a los criterios nro ot (trnum), cliente (clinom) ) que muestre las ordenes encontradas en una tabla
+
+  y tablas que tengan por encabezados el nombre de lista ("CTP","Cortadora de Bobinas","Guillotina para Impresión","PM","SM 5 Cuerpos","SM 4 CUERPOS","GTO/QUICK","SORZ","Guillotina p/ Terminación",
+    "Digital","Laminadora Automática","Laminadora Manual","Barnizadora","Minerva Grande","Minerva Chica",
+    "Plana","Eterna","Tareas Manuales","Dobladora","Horizon","Fidia","Duplo","Binder","Encuadernación","Zechini","Perforadora","Anilladora Automática",
+    "Anilladora Manual","Tareas de Mantenimiento") 
+
+    y cada tabla debe tener los siguientes campos (donde las filas se puedan reordenar usando stimulus): Posición (postition)   N° OT (trnum) Cliente (clinom) Producto (nomprod)  Cantidad (trcan)  Papel (papel) Gramaje (gramaje) Color (colores)

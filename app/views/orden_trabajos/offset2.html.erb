@@ -1,0 +1,119 @@
+<!-- 🔹 Encabezado principal -->
+<div class="d-flex justify-content-around bg-primary sticky-top my-3 text-white" style="z-index: 900;">
+  <div>
+    <h1 class="mt-1"><strong>GTO</strong></h1>
+  </div>
+  <div>
+    <h1 class="mt-1"><strong>SORZ</strong></h1>
+  </div>
+</div>
+
+<!-- 🔸 Contenedor principal -->
+<div class="d-flex justify-content-around">
+
+  <!-- 🟦 Tabla GTO -->
+  <div class="container">
+    <table class="table table-striped">
+      <thead class="bg-info text-white">
+        <tr>
+          <th><h4 class="fw-bold">OT</h4></th>
+          <th><h4 class="fw-bold">Cliente</h4></th>
+          <th><h4 class="fw-bold">Cantidad</h4></th>
+          <th><h4 class="fw-bold">Color</h4></th>
+          <th><h4 class="fw-bold">Observación</h4></th>
+          <th><h4 class="fw-bold">Fecha límite</h4></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @orden_trabajos.each do |orden_trabajo| %>
+          <% if cadenatovector(orden_trabajo.procesos).include?("GTO") %>
+            <tr>
+              <% case orden_trabajo.priority
+                 when "Alta" %>
+                   <td style="background-color:#FF0000;">
+                     <strong><%= orden_trabajo.trnum %></strong>
+                   </td>
+                 <% when "Media" %>
+                   <td style="background-color:#FFFF00;">
+                     <strong><%= orden_trabajo.trnum %></strong>
+                   </td>
+                 <% else %>
+                   <td style="background-color:#7CFC00;">
+                     <strong><%= orden_trabajo.trnum %></strong>
+                   </td>
+              <% end %>
+
+              <td><%= orden_trabajo.clinom %></td>
+              <td><%= orden_trabajo.trcan %></td>
+              <td><%= orden_trabajo.colores %></td>
+              <td><%= truncate(orden_trabajo.observaciones, length: 50) %></td>
+              <td><strong><%= orden_trabajo.deadline.try(:strftime, "%d-%m-%Y") %></strong></td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 🟨 Tabla SORZ -->
+  <div class="container">
+    <table class="table table-striped">
+      <thead class="bg-info text-white">
+        <tr>
+          <th><h4 class="fw-bold">OT</h4></th>
+          <th><h4 class="fw-bold">Cliente</h4></th>
+          <th><h4 class="fw-bold">Cantidad</h4></th>
+          <th><h4 class="fw-bold">Color</h4></th>
+          <th><h4 class="fw-bold">Observación</h4></th>
+          <th><h4 class="fw-bold">Fecha límite</h4></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @orden_trabajos.each do |orden_trabajo| %>
+          <% if cadenatovector(orden_trabajo.procesos).include?("SORZ") %>
+            <tr>
+              <% case orden_trabajo.priority
+                 when "Alta" %>
+                   <td style="background-color:#FF0000;">
+                     <strong><%= orden_trabajo.trnum %></strong>
+                   </td>
+                 <% when "Media" %>
+                   <td style="background-color:#FFFF00;">
+                     <strong><%= orden_trabajo.trnum %></strong>
+                   </td>
+                 <% else %>
+                   <td style="background-color:#7CFC00;">
+                     <strong><%= orden_trabajo.trnum %></strong>
+                   </td>
+              <% end %>
+
+              <td><%= orden_trabajo.clinom %></td>
+              <td><%= orden_trabajo.trcan %></td>
+              <td><%= orden_trabajo.colores %></td>
+              <td><%= truncate(orden_trabajo.observaciones, length: 50) %></td>
+              <td><strong><%= orden_trabajo.deadline.try(:strftime, "%d-%m-%Y") %></strong></td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ⚙️ Auto-scroll y redirección -->
+<script>
+  // Auto-scroll hacia abajo y arriba en bucle
+  setInterval(function() {
+    $("html, body").animate({ scrollTop: $(document).height() }, 50000);
+    setTimeout(function() {
+      $("html, body").animate({ scrollTop: 0 }, 1);
+    }, 1);
+  }, 1);
+
+  // Redirección automática a los 25 segundos
+  setTimeout(() => {
+    window.location.href = "<%= offset2_path %>";
+  }, 25000);
+</script>

@@ -1,0 +1,102 @@
+<div class="container my-2">
+  <h3 class="fw-bold text-center mb-4">
+    <%= @orden_trabajo.clinom.presence || "Nueva Orden de Trabajo" %>
+  </h3>
+
+  <%= simple_form_for @orden_trabajo do |f| %>
+    <%= f.error_notification %>
+
+    <div class="form-inputs cliente-new-form">
+      <!-- Primera fila -->
+      <div class="row">
+        <div class="col-md-6">
+          <label class="fw-bold">Cliente</label>
+          <%= f.input :clinom, label: false, required: true, autofocus: true,
+              input_html: { class: "form-control", placeholder: "Cliente" } %>
+        </div>
+
+        <div class="col-md-6">
+          <label class="fw-bold">Producto</label>
+          <%= f.input :nomprod, label: false, required: true, autofocus: true,
+              input_html: { class: "form-control", placeholder: "Producto" } %>
+        </div>
+      </div>
+
+      <!-- Segunda fila -->
+      <div class="row my-2">
+        <div class="col-md-2">
+          <label class="fw-bold">N° OT</label>
+          <%= f.input :trnum, label: false, required: true,
+              input_html: { class: "form-control", placeholder: "N° OT" } %>
+        </div>
+
+        <div class="col-md-2">
+          <label class="fw-bold">Cantidad</label>
+          <%= f.input :trcan, label: false, required: true,
+              input_html: { class: "form-control", placeholder: "Cantidad" } %>
+        </div>
+
+        <div class="col-md-4">
+          <label class="fw-bold">Papel</label>
+          <%= f.input :papel, label: false, required: true,
+              input_html: { class: "form-control", placeholder: "Papel" } %>
+        </div>
+
+        <div class="col-md-2">
+          <label class="fw-bold">Colores</label>
+          <%= f.input :colores, label: false, required: true,
+              input_html: { class: "form-control", placeholder: "Colores" } %>
+        </div>
+
+        <div class="col-md-2">
+          <label class="fw-bold">Gramaje</label>
+          <%= f.input :gramaje, label: false, required: true,
+              input_html: { class: "form-control", placeholder: "Gramaje" } %>
+        </div>
+      </div>
+
+      <!-- Tercera fila -->
+      <div class="row my-2">
+        <div class="col-md-3">
+          <label class="fw-bold">Pliego</label>
+          <%= f.input :pliego, label: false, required: true,
+              input_html: { class: "form-control", placeholder: "Pliego" } %>
+        </div>
+
+        <div class="col-md-3">
+          <label class="fw-bold">Fecha Ingreso</label>
+          <%= f.input :trcar, as: :date, html5: true, label: false,
+              input_html: { class: "form-control" } %>
+        </div>
+
+        <div class="col-md-3">
+          <label class="fw-bold">Fecha Prometida</label>
+          <%= f.input :deadline, as: :date, html5: true, label: false,
+              input_html: { class: "form-control", value: f.object.deadline || (Date.today + 15.days) } %>
+        </div>
+
+        <div class="col-md-3">
+          <label class="fw-bold">Prioridad</label>
+          <%= f.input :priority, as: :select, label: false,
+              collection: ["Alta", "Media", "Baja"],
+              include_blank: "Seleccionar",
+              input_html: { class: "form-control" } %>
+        </div>
+      </div>
+
+      <!-- Observaciones -->
+      <div class="row my-2">
+        <div class="col-md-8">
+          <%= f.input :observaciones, label: "Observaciones", as: :text,
+              input_html: { class: "form-control", rows: 3, placeholder: "Observaciones" } %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botón centrado -->
+    <div class="text-center my-4">
+      <%= f.button :submit, "Confirmar", class: "btn btn-primary btn-lg px-5" %>
+    </div>
+  <% end %>
+</div>
+

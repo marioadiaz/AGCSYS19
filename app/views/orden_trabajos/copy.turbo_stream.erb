@@ -1,0 +1,3 @@
+<%= turbo_stream.after @orden_trabajo.id do %>
+  <%= render "orden_trabajo_row", orden_trabajo: @orden_trabajo %>
+<% end %>

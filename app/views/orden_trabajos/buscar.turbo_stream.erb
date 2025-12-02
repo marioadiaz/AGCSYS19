@@ -1,0 +1,6 @@
+<turbo-stream target="resultados_busqueda">
+  <template>
+    <%= render partial: "orden_trabajos/resultados",
+               locals: { resultados: @resultados, lista: params[:lista].to_s } %>
+  </template>
+</turbo-stream>

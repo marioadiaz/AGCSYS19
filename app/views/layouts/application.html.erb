@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Agcsys19" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
+    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>    
+    <%= javascript_include_tag "jquery.min", defer: false %>
+    <%= javascript_include_tag "bootstrap.bundle.min", preload: false, defer: false %>
+    <%= javascript_include_tag "bootstrap-select.min", defer: true %>
+
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/orden_trabajos">Planilla de control</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/listado">Listado</a>
+            </li>          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Planificación
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="/planificacion_taller">1. Taller</a></li>
+                <li><a class="dropdown-item" href="/panel_listas">2. Reordenar trabajos por listas</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Post pantallas
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="/post1">1. Buv-Laminado</a></li>
+                <li><a class="dropdown-item" href="/post2">2. Tipografia-Fidia</a></li>
+                <li><a class="dropdown-item" href="/post3">3. Baum-Renz</a></li>
+                <li><a class="dropdown-item" href="/post4">4. Duplo-Cos Hilo-Binder</a></li>
+                <li><a class="dropdown-item" href="/post5">5. Zechini-Alzadora-Cos. Alambre</a></li>
+                <li><a class="dropdown-item" href="/post6">6. Guillotina-T.Manuales-Otros</a></li>
+                <li><a class="dropdown-item" href="/post7">7. Proximo a vencer</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Impresión pantallas
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="/digital"> 1. Digital </a></li>
+                <li><a class="dropdown-item" href="/offset1"> 2. Offset 1</a></li>
+                <li><a class="dropdown-item" href="/offset2"> 3. Offset 2</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <%= yield %>
+  </body>
+</html>

@@ -1,0 +1,52 @@
+<!-- 🔹 Encabezado -->
+<div class="d-flex justify-content-around bg-primary sticky-top my-3 text-white" style="z-index: 900;">
+  <h1 class="mt-1 text-center"><strong>TRABAJOS PRÓXIMOS A VENCER</strong></h1>
+</div>
+
+<!-- 🔸 Tabla principal -->
+<div class="mx-5">
+  <table class="table table-striped table-bordered shadow-sm">
+    <thead  class="table-dark">
+      <tr>
+        <th>OT</th>
+        <th>Cliente</th>
+        <th>Producto</th>
+        <th>Observación</th>
+        <th>Fecha límite</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @orden_trabajos.limit(30).each do |orden_trabajo| %>
+        <tr>
+          <% case orden_trabajo.priority
+             when "Alta" %>
+               <td style="background-color:#FF0000;"><strong><%= orden_trabajo.trnum %></strong></td>
+             <% when "Media" %>
+               <td style="background-color:#FFFF00;"><strong><%= orden_trabajo.trnum %></strong></td>
+             <% else %>
+               <td style="background-color:#7CFC00;"><strong><%= orden_trabajo.trnum %></strong></td>
+          <% end %>
+
+          <td><strong><%= orden_trabajo.clinom %></strong></td>
+          <td><%= orden_trabajo.nomprod.first(20) %></td>
+          <td><%= truncate(orden_trabajo.observaciones, length: 50) %></td>
+          <td><strong><%= orden_trabajo.deadline.try(:strftime, "%d-%m-%Y") %></strong></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<!-- ⚙️ Auto-scroll y redirección -->
+<script>
+  // Desplazamiento automático suave
+  setInterval(() => {
+    window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+    setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 2000);
+  }, 20000);
+
+  // Redirección automática al siguiente post
+  setTimeout(() => {
+    window.location.href = "<%= post7_path %>";
+  }, 35000);
+</script>

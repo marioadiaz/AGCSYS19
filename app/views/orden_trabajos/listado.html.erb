@@ -1,0 +1,84 @@
+<p id="notice"><%= notice %></p>
+<div class="d-flex justify-content-between align-items-center mb-4 px-3 flex-wrap">
+  <!-- 🏭 Título -->
+  <div class="me-4">
+    <h3 class="mb-0 fw-bold">Listado de trabajos en el Taller</h3>
+  </div>
+  <!-- 🔍 Buscador -->
+  <div class="flex-grow-1 text-center">
+    <input class="form-control d-inline-block w-50"
+           id="buscador_datos"
+           type="text"
+           placeholder="Buscar trabajo...">
+  </div>
+  <!-- 📄 Botón PDF -->
+  <div class="ms-3">
+    <%= link_to 'Descargar PDF',
+                listado_path(format: 'pdf'),
+                class: 'btn btn-success btn-lg',
+                target: '_blank' %>
+  </div>
+  <!-- Botón Descargar Excel -->  
+  <div class="ms-2">
+    <%= link_to 'Descargar Excel',
+            listado_path(format: 'xlsx'),
+            class: 'btn btn-warning btn-lg',
+            target: '_blank' %>
+  </div>          
+  <!-- 📊 Botón Importar Excel -->
+  <div class="ms-2">
+    <%= link_to '📥 Importar Excel',
+            new_orden_trabajos_import_path,
+            class: 'btn btn-primary btn-lg' %>
+  </div>
+</div>
+
+<!-- Botón para volver arriba -->
+<button onclick="topFunction()" id="myBtn" title="Volver arriba"
+        class="btn btn-danger shadow fw-bold text-white"
+        style="display:none; position:fixed; bottom:40px; right:40px; z-index:9999;
+               border-radius:8px; padding:10px 20px; font-size:16px;">
+  Tira Mi Su
+</button>
+<!-- 📋 Tabla principal -->
+<table id="TablaOrdenesTrabajos" class="table-striped table table-responsive" data-controller="orden-trabajo">
+  <thead  class="table-dark">
+    <tr>
+      <th>OT</th>
+      <th>Cliente</th>
+      <th>Producto</th>
+      <th>Cantidad</th>
+      <th>Observaciones</th>
+      <th>Estado actual</th>
+      <th>Procesos</th>
+      <th>Fecha entrada</th>
+      <th>Fecha entrega</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="TablaOrdenesTrabajos">
+    <% @orden_trabajos.each do |orden_trabajo| %>
+      <tr>
+        <td><%= link_to orden_trabajo.trnum, orden_trabajo %></td>
+        <td><%= link_to orden_trabajo.clinom, orden_trabajo %></td>
+        <td><%= orden_trabajo.nomprod %></td>
+        <td><%= orden_trabajo.trcan %></td>
+        <td><%= truncate(orden_trabajo.observaciones, length: 50) %></td>
+        <td><%= orden_trabajo.estado_actual %></td>
+        <td><%= orden_trabajo.procesos %></td>
+        <td><%= l orden_trabajo.trcar, format: :corto if orden_trabajo.trcar.present? %></td>
+        <td><%= l orden_trabajo.deadline, format: :corto if orden_trabajo.deadline.present? %></td>
+        <td class="text-center">
+          <%= link_to orden_trabajo_path(orden_trabajo),
+                        data: {
+                          turbo_method: :delete,
+                          turbo_confirm: "¿Eliminar esta orden?"
+                        },
+                        class: "btn btn-danger btn-sm" do %>
+              <i class="fa-solid fa-trash"></i>
+            <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -1,0 +1,36 @@
+<div class="d-flex justify-content-center">
+  <div class="text-center my-3">
+    <%= link_to 'Descargar PDF',
+                planificacion_tallerPDF_path(format: 'pdf'),
+                class: 'btn btn-warning btn-lg',
+                target: '_blank' %>
+  </div>
+</div>
+
+<!-- ============================
+     PROCESOS DE IMPRESIÓN
+     ============================ -->
+<%= render partial: "proceso", locals: { proceso: "SM" } %>
+<%= render partial: "proceso", locals: { proceso: "PM" } %>
+<%= render partial: "proceso", locals: { proceso: "GTO" } %>
+<%= render partial: "proceso", locals: { proceso: "Ko" } %>
+<%= render partial: "proceso", locals: { proceso: "Xe" } %>
+<%= render partial: "proceso", locals: { proceso: "SORZ" } %>
+
+<h1 class="m-3 bg-primary text-center p-2 text-white rounded">
+  <strong>TERMINACIÓN</strong>
+</h1>
+
+<!-- ============================
+     PROCESOS DE TERMINACIÓN
+     ============================ -->
+<%= render partial: "proceso", locals: { proceso: "Tipografia" } %>
+<%= render partial: "proceso", locals: { proceso: "Binder" } %>
+<%= render partial: "proceso", locals: { proceso: "Duplo" } %>
+<%= render partial: "proceso", locals: { proceso: "Lam" } %>
+<%= render partial: "proceso", locals: { proceso: "Zechini" } %>
+<%= render partial: "proceso", locals: { proceso: "Baum" } %>
+<%= render partial: "proceso", locals: { proceso: "Fidia" } %>
+<%= render partial: "proceso", locals: { proceso: "Buv" } %>
+<%= render partial: "proceso", locals: { proceso: "Renz" } %>
+

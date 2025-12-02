@@ -1,0 +1,8 @@
+<%= turbo_stream.replace @orden_trabajo do %>
+  <%= render(
+        partial: (@context == "proximo_vencer" ? "proximo_vencer_row" : "orden_trabajo_row"),
+        locals: { orden_trabajo: @orden_trabajo }
+      ) %>
+<% end %>
+
+<%= turbo_stream.prepend "flash", partial: "layouts/flash", locals: { notice: "✅ Orden actualizada correctamente" } %>

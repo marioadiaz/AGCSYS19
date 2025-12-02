@@ -1,0 +1,9 @@
+@import 'bootstrap/scss/bootstrap';
+@import 'bootstrap-icons/font/bootstrap-icons';
+@import 'bootstrap.min';
+@import 'bootstrap-select.min';
+
+.highlight-row {
+  background-color: #26611c !important;
+  transition: background-color 1.5s ease;
+}

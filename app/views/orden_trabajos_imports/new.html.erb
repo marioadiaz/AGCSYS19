@@ -1,0 +1,66 @@
+<div class="container mt-5">
+  <h2 class="mb-4 text-center text-primary">
+    Importar planilla excel de Aramis
+  </h2>
+
+  <div class="text-center mt-3">
+    <h3 class="text-danger fw-bold">
+      ⚠️ ATENCIÓN:
+      <span class="text-dark fw-normal">Solamente se pueden subir archivos con extensión</span>
+      <strong>XLSX</strong>.
+    </h3>
+  </div>
+
+  <!-- Fila centrada con las tarjetas -->
+  <div class="row justify-content-center align-items-start mt-4 text-center g-4">
+    <!-- Tarjeta 1 -->
+    <div class="col-md-4 col-sm-6">
+      <div class="card shadow-sm mx-auto" style="width: 18rem;">
+        <%= image_tag "csv-xls.jpg", class: "card-img-top img-fluid" %>
+        <div class="card-body">
+          <h5 class="card-title text-danger fw-bold">¡ARCHIVOS NO VÁLIDOS!</h5>
+          <p class="card-text">
+            Si los archivos terminan con <strong>.csv</strong> o <strong>.xls</strong>,
+            deberán convertirse a un archivo <strong>.xlsx</strong>.
+          </p>
+          <%= link_to "Convertir a XLSX", "https://convertio.co/es/xls-xlsx/",
+                      class: "btn btn-danger", target: "_blank" %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tarjeta 2 -->
+    <div class="col-md-4 col-sm-6">
+      <div class="card shadow-sm mx-auto" style="width: 18rem;">
+        <%= image_tag "xlsxx.png", class: "card-img-top img-fluid" %>
+        <div class="card-body">
+          <h5 class="card-title text-success fw-bold">ARCHIVO VÁLIDO ✅</h5>
+          <p class="card-text">
+            Subí los archivos que terminan en <strong>.xlsx</strong>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Formulario centrado -->
+  <div class="card p-4 shadow-sm mt-5 mx-auto">
+    <%= form_with url: orden_trabajos_imports_path, local: true, html: { multipart: true } do |form| %>
+      <div class="mb-3">
+        <%= form.label :file, "Seleccionar archivo Excel (.xlsx o .xls)", class: "form-label fw-bold" %>
+        <%= form.file_field :file, accept: ".xls,.xlsx", class: "form-control" %>
+      </div>
+
+      <div class="text-center">
+        <%= form.submit "Importar", class: "btn btn-primary btn-lg mt-3 px-5" %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Nota final -->
+  <div class="alert alert-info mt-4 text-center" role="alert">
+    <strong>ℹ️ Formato esperado del Excel:</strong><br>
+    trnum, trcan, trcar, clinom, papel, gramaje, colores, pliego, nomprod,
+    fecentr, cam10, cam12, cam24
+  </div>
+</div>

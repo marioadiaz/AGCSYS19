@@ -1,0 +1,75 @@
+
+  <tr id="<%= dom_id(@orden_trabajo) %>">
+    <%= form_with model: @orden_trabajo,
+                  remote: true,
+                  data: { action: "turbo:submit-end->orden-trabajo#actualizado" } do |f| %>
+
+      <!-- OT -->
+      <td class="text-center">
+            <% color_class =
+                case orden_trabajo.priority
+                when "Alta"  then "btn-danger"  # rojo
+                when "Media" then "btn-warning" # amarillo
+                else              "btn-success" # verde
+                end %>
+
+            <%= link_to orden_trabajo.trnum,
+            "#",
+            class: "btn btn-sm #{color_class}",
+            data: {
+              action: "click->orden-trabajo#copy",
+              id: orden_trabajo.id
+            } %>
+      </td>
+      <td><%= link_to @orden_trabajo.clinom, orden_trabajo_path(@orden_trabajo) %></td>
+      <td><%= @orden_trabajo.nomprod.first(30) %></td>
+      <td><%= @orden_trabajo.trcan %></td>
+      <td>
+        <%= f.select :estado_actual,
+                     ["Pendiente", "Cliente", "Ismael diseño", "Edu diseño", "Miguel diseño",
+                      "Gina", "Diseño 3ro", "Control", "CTP", "Impresión", "Terminación", "Empaque"],
+                     {}, class: "form-select form-select-sm" %>
+      </td>
+      <td>
+        <%= f.text_field :procesos,
+                         value: @orden_trabajo.procesos,
+                         class: "form-control form-control-sm",
+                         disabled: true %>           
+      </td>
+      <td>
+        <%= f.date_field :fecentr,
+                         value: @orden_trabajo.fecentr,
+                         class: "form-control form-control-sm" %>
+      </td>
+      <td>
+        <%= f.select :priority,
+                         ["Alta", "Media", "Baja"],
+                         { include_blank: false },
+                         class: "form-select form-select-sm" %>
+      </td>
+      <td>
+        <%= f.text_field :observaciones,
+                         value: @orden_trabajo.observaciones,
+                         placeholder: "Observaciones",
+                         class: "form-control form-control-sm",
+                         size: 20 %>
+      </td>
+      <td class="text-center">
+        <%= f.submit "✅ Ok",
+                         class: "btn btn-primary btn-sm",
+                         data: { orden_trabajo_target: "submitButton" } %>
+      </td>
+      <td class="text-center">
+        <%= link_to orden_trabajo_path(@orden_trabajo),
+                    data: {
+                      turbo_method: :delete,
+                      turbo_confirm: "¿Eliminar esta orden?"
+                    },
+                    class: "btn btn-danger btn-sm" do %>
+          <i class="fa-solid fa-trash"></i>
+        <% end %>
+      </td>
+    <% end %>
+  </tr>
+
+

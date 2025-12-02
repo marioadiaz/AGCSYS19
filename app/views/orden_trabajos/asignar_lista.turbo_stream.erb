@@ -1,0 +1,47 @@
+<!-- 1️⃣ Cambiar el botón "Asignar" a "OK!" -->
+<turbo-stream action="update" target="btn_asignar_<%= @orden_trabajo.id %>">
+  <template>
+    <button class="btn btn-secondary btn-sm" disabled>
+      ✅ Ok!
+    </button>
+  </template>
+</turbo-stream>
+
+<!-- 2️⃣ Eliminar la fila del buscador -->
+<turbo-stream action="remove" target="resultado_<%= @orden_trabajo.id %>">
+</turbo-stream>
+
+<% ultima_lista = @orden_trabajo.lista.to_s.split(',').last.to_s.strip %>
+
+<turbo-stream action="append" target="tabla_lista_<%= ultima_lista.parameterize(separator: '_') %>">
+  <template>
+    <tr id="ot_<%= @orden_trabajo.id %>" class="table-success fw-bold">
+      <td><%= @orden_trabajo.position %></td>
+      <td><%= @orden_trabajo.trnum %></td>
+      <td><%= @orden_trabajo.clinom %></td>
+      <td><%= @orden_trabajo.nomprod %></td>
+      <td><%= @orden_trabajo.trcan %></td>
+      <td><%= @orden_trabajo.papel %></td>
+      <td><%= @orden_trabajo.gramaje %></td>
+      <td><%= @orden_trabajo.colores %></td>
+      <td>
+        <%= button_to quitar_lista_orden_trabajo_path(@orden_trabajo),
+              method: :patch,
+              class: "btn btn-danger btn-sm",
+              form: { data: { turbo_stream: true } } do %>
+          ❌ Quitar
+        <% end %>
+      </td>
+
+    </tr>
+  </template>
+</turbo-stream>
+
+<script>
+  setTimeout(() => {
+    const row = document.getElementById("ot_<%= @orden_trabajo.id %>");
+    row?.classList.remove("highlight-row");
+  }, 2000);
+</script>
+
+

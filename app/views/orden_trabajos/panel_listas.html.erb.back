@@ -1,0 +1,139 @@
+<h2 class="mb-4">Panel de Listas</h2>
+
+<div class="row">
+  <div class="col-md-4">
+    <%= form_with model: @orden_trabajo, url: orden_trabajos_path do |f| %>
+      <div class="mb-3">
+        <%= f.label :lista, "Listas" %>
+        <%= f.select :lista, @listas, {}, class: "form-select" %>
+      </div>
+    <% end %>
+  </div>
+  
+  <!-- Buscador -->
+  <div class="col-md-8">
+    <%= form_with url: panel_listas_orden_trabajos_path, method: :get, local: true do |f| %>
+      <div class="input-group mb-3">
+        <%= f.text_field :buscar, value: params[:buscar], class: "form-control", placeholder: "Buscar N° OT o Cliente" %>
+        <button class="btn btn-primary">Buscar</button>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+
+  <div class="row align-items-center mb-4">
+
+    <!-- Dropdown -->
+    <div class="col-md-4">
+      <label class="form-label fw-bold mb-1 fs-4">Seleccione Lista</label>
+      <%= select_tag :lista,
+            options_for_select(OrdenTrabajo::LIST),
+            class: "form-select form-select-lg",
+            data: { buscar_listas_target: "lista" } %>
+    </div>
+
+    <!-- Buscador -->
+    <div class="col-md-8">
+      <label class="form-label fw-bold mb-1 fs-4">Buscar</label>
+      <input class="form-control"
+             id="buscador_datos"
+             type="text"
+             placeholder="Buscar trabajo..."
+             data-action="input->buscar-listas#buscar"
+             data-buscar-listas-target="buscador">
+    </div>
+  </div>
+
+  <!-- Tabla de resultados -->
+  <table class="table table-striped table-hover text-center mt-3 d-none"
+         data-buscar-listas-target="tablaResultados">
+
+    <thead class="table-dark">
+      <tr>
+        <th>OT</th>
+        <th>Cliente</th>
+        <th>Producto</th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody data-buscar-listas-target="resultados">
+    </tbody>
+  </table>
+
+<div class="row">
+    <!-- Resultados -->
+    <% if @resultados.any? %>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>N° OT</th>
+            <th>Cliente</th>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Papel</th>
+            <th>Gramaje</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @resultados.each do |ot| %>
+            <tr>
+              <td><%= ot.trnum %></td>
+              <td><%= ot.clinom %></td>
+              <td><%= ot.nomprod %></td>
+              <td><%= ot.trcan %></td>
+              <td><%= ot.papel %></td>
+              <td><%= ot.gramaje %></td>
+              <td>
+                <%= button_to "Agregar a lista",
+              asignar_lista_orden_trabajo_path(ot),
+              method: :patch,
+              class: "btn btn-success btn-sm" %>
+
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+  </div>
+</div>
+
+<hr class="my-4">
+
+<h3>Órdenes por Lista</h3>
+
+<% @por_lista.each do |nombre_lista, ots| %>
+  <h4 class="mt-4"><%= nombre_lista %></h4>
+
+  <table class="table table-striped"
+         data-controller="sortable"
+         data-sortable-list="<%= nombre_lista %>">
+    <thead>
+      <tr>
+        <th>Posición</th>
+        <th>N° OT</th>
+        <th>Cliente</th>
+        <th>Producto</th>
+        <th>Cantidad</th>
+        <th>Papel</th>
+        <th>Gramaje</th>
+      </tr>
+    </thead>
+    <tbody data-sortable-target="container">
+      <% ots.each do |ot| %>
+        <tr data-id="<%= ot.id %>">
+          <td><%= ot.position %></td>
+          <td><%= ot.trnum %></td>
+          <td><%= ot.clinom %></td>
+          <td><%= ot.nomprod %></td>
+          <td><%= ot.trcan %></td>
+          <td><%= ot.papel %></td>
+          <td><%= ot.gramaje %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

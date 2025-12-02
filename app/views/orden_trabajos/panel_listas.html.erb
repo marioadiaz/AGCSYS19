@@ -1,0 +1,105 @@
+<h2 class="mb-4">Panel de Listas</h2>
+
+<div data-controller="buscar-ot">
+
+  <!-- ⭐ FILA 1: Dropdown + Buscador -->
+  <div class="row align-items-end">
+
+    <!-- Dropdown -->
+    <div class="col-md-4">
+      <%= form_with model: @orden_trabajo, url: orden_trabajos_path, local: true do |f| %>
+        <div class="mb-3">
+          <%= f.label :lista, "Listas", class: "form-label fw-bold" %>
+          <%= f.select :lista, @listas, {},
+                class: "form-select",
+                data: { buscar_ot_target: "lista" } %>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Buscador -->
+    <div class="col-md-8">
+      <div class="input-group mb-3">
+        <input type="text"
+               class="form-control"
+               placeholder="Buscar N° OT o Cliente"
+               data-buscar-ot-target="input">
+
+        <button class="btn btn-primary"
+                type="button"
+                data-action="click->buscar-ot#buscar">
+          Buscar
+        </button>
+      </div>
+    </div>
+
+  </div> <!-- FIN FILA 1 -->
+
+
+  <!-- ⭐ FILA 2: Resultados -->
+  <div class="row mt-3">
+    <div class="col-12">
+      <div id="resultados_busqueda"
+           data-buscar-ot-target="resultados">
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ⭐ FILA 3: TABLAS DE LISTAS (Aquí va tu bloque) -->
+  <div class="row mt-5">
+    <div class="col-12">
+
+      <% OrdenTrabajo::LIST.each do |lista| %>
+
+        <h4 class="mt-4"><%= lista %></h4>
+
+        <table class="table table-sm table-bordered align-middle text-center">
+          <thead class="table-secondary">
+            <tr>
+              <th>Posición</th>
+              <th>N° OT</th>
+              <th>Cliente</th>
+              <th>Producto</th>
+              <th>Cantidad</th>
+              <th>Papel</th>
+              <th>Gramaje</th>
+              <th>Color</th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <!-- ESTE ES EL TARGET DE TURBO -->
+          <tbody id="tabla_lista_<%= lista.parameterize(separator: '_') %>">
+
+            <% @ordenes_por_lista[lista].to_a.each do |ot| %>
+              <tr id="ot_<%= ot.id %>">
+                <td><%= ot.position %></td>
+                <td><%= ot.trnum %></td>
+                <td><%= ot.clinom %></td>
+                <td><%= ot.nomprod %></td>
+                <td><%= ot.trcan %></td>
+                <td><%= ot.papel %></td>
+                <td><%= ot.gramaje %></td>
+                <td><%= ot.colores %></td>
+                <!-- BOTÓN QUITAR -->
+                <td>
+                  <%= button_to quitar_lista_orden_trabajo_path(ot),
+                        method: :patch,
+                        class: "btn btn-danger btn-sm",
+                        form: { data: { turbo_stream: true } } do %>
+                    ❌ Quitar
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+
+          </tbody>
+        </table>
+
+      <% end %>
+
+    </div>
+  </div>
+
+</div>
