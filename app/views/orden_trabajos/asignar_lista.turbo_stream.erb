@@ -1,19 +1,10 @@
-<!-- 1️⃣ Cambiar el botón "Asignar" a "OK!" -->
-<turbo-stream action="update" target="btn_asignar_<%= @orden_trabajo.id %>">
-  <template>
-    <button class="btn btn-secondary btn-sm" disabled>
-      ✅ Ok!
-    </button>
-  </template>
-</turbo-stream>
-
 <!-- 2️⃣ Eliminar la fila del buscador -->
 <turbo-stream action="remove" target="resultado_<%= @orden_trabajo.id %>">
 </turbo-stream>
 
 <% ultima_lista = @orden_trabajo.lista.to_s.split(',').last.to_s.strip %>
 
-<turbo-stream action="append" target="tabla_lista_<%= ultima_lista.parameterize(separator: '_') %>">
+<turbo-stream action="append" target="tabla_lista_<%= @lista_asignada.parameterize(separator: '_') %>">
   <template>
     <tr id="ot_<%= @orden_trabajo.id %>" class="table-success fw-bold">
       <td><%= @orden_trabajo.position %></td>
@@ -32,7 +23,6 @@
           ❌ Quitar
         <% end %>
       </td>
-
     </tr>
   </template>
 </turbo-stream>
