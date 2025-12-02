@@ -51,43 +51,40 @@ class OrdenTrabajosController < ApplicationController
   end
 
   def asignar_lista
-    Rails.logger.info "🟦 PARAMS RECIBIDOS EN asignar_lista: #{params.inspect}"
+    @orden_trabajo   = OrdenTrabajo.find(params[:id])
+    @lista_asignada  = params[:lista].to_s.strip
 
-    @orden_trabajo = OrdenTrabajo.find(params[:id])
-
-    nueva_lista = params[:lista].to_s.strip
-    @ultima_lista = nueva_lista   # <- usamos esto en la vista turbo_stream
-
-    if nueva_lista.present?
+    if @lista_asignada.present?
       listas_actuales = @orden_trabajo.lista.to_s.split(",").reject(&:blank?)
-      listas_actuales << nueva_lista unless listas_actuales.include?(nueva_lista)
-      @orden_trabajo.update(lista: listas_actuales.join(",") + ",")
+      unless listas_actuales.include?(@lista_asignada)
+        listas_actuales << @lista_asignada
+        @orden_trabajo.update(lista: listas_actuales.join(",") + ",")
+      end
     end
 
     respond_to do |format|
-      format.turbo_stream
+      format.turbo_stream   # asignar_lista.turbo_stream.erb
       format.html { redirect_back fallback_location: panel_listas_orden_trabajos_path, notice: "Asignado correctamente." }
     end
   end
 
-def quitar_lista
-  @orden_trabajo = OrdenTrabajo.find(params[:id])
+  def quitar_lista
+    @orden_trabajo = OrdenTrabajo.find(params[:id])
 
-  # Listas actuales como array limpio
-  listas = @orden_trabajo.lista.to_s.split(",").reject(&:blank?)
+    # Listas actuales como array limpio
+    listas = @orden_trabajo.lista.to_s.split(",").reject(&:blank?)
 
-  # Quitamos la ÚLTIMA lista
-  listas.pop
+    # Quitamos la ÚLTIMA lista
+    listas.pop
 
-  # Guardamos el nuevo valor (si queda vacío, guardamos nil)
-  @orden_trabajo.update(lista: listas.any? ? listas.join(",") + "," : nil)
+    # Guardamos el nuevo valor (si queda vacío, guardamos nil)
+    @orden_trabajo.update(lista: listas.any? ? listas.join(",") + "," : nil)
 
-  respond_to do |format|
-    format.turbo_stream
-    format.html { redirect_back fallback_location: panel_listas_orden_trabajos_path, notice: "Quitado correctamente." }
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_back fallback_location: panel_listas_orden_trabajos_path, notice: "Quitado correctamente." }
+    end
   end
-end
-
 
   def copy
     original = OrdenTrabajo.find(params[:id])
