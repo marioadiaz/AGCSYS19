@@ -3,7 +3,7 @@
   <div data-controller="buscar-ot">
     <div class="row align-items-end mt-3">
       <!-- Dropdown -->
-      <div class="col-md-4">
+      <div class="col-md-3">
         <%= form_with model: @orden_trabajo, url: orden_trabajos_path, local: true do |f| %>
           <div class="mb-3">
             <%= f.select :lista, @listas, {},
@@ -13,7 +13,7 @@
         <% end %>
       </div>
       <!-- Buscador -->
-      <div class="col-md-8">
+      <div class="col-md-7">
         <div class="input-group mb-3">
           <input type="text"
                  class="form-control"
@@ -27,14 +27,14 @@
           </button>
         </div>
       </div>
-      <div class="d-flex justify-content-end mb-3">
+      <!-- Botón PDF -->
+      <div class="col-md-2 d-flex justify-content-end mb-3">
         <%= link_to "📄 Descargar PDF",
-                    panel_listas_pdf_orden_trabajos_path(format: :pdf),
-                    class: 'btn btn-success btn-lg',
-                    target: "_blank",
-                    rel: "noopener" %>
+                panel_listas_pdf_orden_trabajos_path(format: :pdf),
+                class: "btn btn-success h-100",
+                target: "_blank",
+                rel: "noopener" %>
       </div>
-
     </div>
     <div class="row mt-3">
       <div class="col-12">
