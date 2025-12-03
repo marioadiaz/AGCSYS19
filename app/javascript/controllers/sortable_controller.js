@@ -5,7 +5,8 @@ export default class extends Controller {
   static values = { url: String }
 
   connect() {
-    console.log("🧩 Controlador sortable conectado")
+    console.log("🧩 sortable para lista activado:", this.urlValue)
+
     this.dragged = null
 
     this.tbodyTarget.addEventListener("dragstart", this.onDragStart.bind(this))
@@ -14,21 +15,28 @@ export default class extends Controller {
   }
 
   onDragStart(event) {
-    this.dragged = event.target
-    event.target.classList.add("table-warning")
+    this.dragged = event.target.closest("tr")
+    this.dragged.classList.add("table-warning")
   }
 
   onDragOver(event) {
     event.preventDefault()
+
     const target = event.target.closest("tr")
+
+    // 🚫 Evita mezclar entre tablas
+    if (!target || target.parentElement !== this.tbodyTarget) {
+      return
+    }
+
     if (target && target !== this.dragged) {
-      const tbody = this.tbodyTarget
       const rect = target.getBoundingClientRect()
       const midpoint = rect.top + rect.height / 2
+
       if (event.clientY < midpoint) {
-        tbody.insertBefore(this.dragged, target)
+        this.tbodyTarget.insertBefore(this.dragged, target)
       } else {
-        tbody.insertBefore(this.dragged, target.nextSibling)
+        this.tbodyTarget.insertBefore(this.dragged, target.nextSibling)
       }
     }
   }
@@ -41,25 +49,18 @@ export default class extends Controller {
 
   updateOrder() {
     const ids = Array.from(this.tbodyTarget.querySelectorAll("tr"))
-      .map(row => row.dataset.id)
-    console.log("📦 Nuevo orden a enviar:", ids)
+      .map(row => row.id.replace("ot_", "")) // ✔️ ID correcto
+
+    console.log("📦 Nuevo orden enviado:", ids)
 
     fetch(this.urlValue, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Accept": "application/json",
-        "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content
+        "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content,
+        "Accept": "application/json"
       },
       body: JSON.stringify({ ids: ids })
     })
-    .then(response => {
-      if (response.ok) {
-        console.log("✅ Orden actualizado correctamente")
-      } else {
-        console.error("❌ Error al actualizar orden", response)
-      }
-    })
-    .catch(err => console.error("💥 Error de red:", err))
   }
 }

@@ -5,6 +5,8 @@ Rails.application.routes.draw do
   # =========================================================
   # 📦 ÓRDENES DE TRABAJO
   # =========================================================
+  get 'orden_trabajos/panel_listas_pdf', to: 'orden_trabajos#panel_listas_pdf',     as: :panel_listas_pdf_orden_trabajos
+
   resources :orden_trabajos do
     collection do
 
@@ -52,8 +54,9 @@ Rails.application.routes.draw do
   # 🔸 No generan conflictos porque tienen nombres distintos de los helpers Rails estándar
   
   get "index_reorder",             to: "orden_trabajos#index_reorder",          as: :index_reorder
-  patch "orden_trabajos/:id/quitar_lista", to: "orden_trabajos#quitar_lista", as: :quitar_lista_orden_trabajo
+  post "orden_trabajos/ordenar_lista", to: "orden_trabajos#ordenar_lista", as: :ordenar_lista_orden_trabajos
 
+  patch "orden_trabajos/:id/quitar_lista", to: "orden_trabajos#quitar_lista", as: :quitar_lista_orden_trabajo  
   
   get 'panel_listas',              to: 'orden_trabajos#panel_listas',           as: :panel_listas
 
