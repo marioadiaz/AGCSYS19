@@ -27,6 +27,14 @@
           </button>
         </div>
       </div>
+      <div class="d-flex justify-content-end mb-3">
+        <%= link_to "📄 Descargar PDF",
+                    panel_listas_pdf_orden_trabajos_path(format: :pdf),
+                    class: 'btn btn-success btn-lg',
+                    target: "_blank",
+                    rel: "noopener" %>
+      </div>
+
     </div>
     <div class="row mt-3">
       <div class="col-12">
@@ -54,9 +62,14 @@
                 <th></th>
               </tr>
             </thead>
-            <tbody id="tabla_lista_<%= lista.parameterize(separator: '_') %>">
+            <tbody
+              id="tabla_lista_<%= lista.parameterize(separator: '_') %>"
+              data-controller="sortable"
+              data-sortable-target="tbody"
+              data-sortable-url-value="<%= ordenar_lista_orden_trabajos_path(lista: lista) %>"
+            >
               <% @ordenes_por_lista[lista].to_a.each do |ot| %>
-                <tr id="ot_<%= ot.id %>">
+                <tr id="ot_<%= ot.id %>" data-id="<%= ot.id %>" draggable="true">
                   <td><%= ot.position %></td>
                   <td><%= ot.trnum %></td>
                   <td><%= ot.clinom %></td>
@@ -65,7 +78,6 @@
                   <td><%= ot.papel %></td>
                   <td><%= ot.gramaje %></td>
                   <td><%= ot.colores %></td>
-                  <!-- BOTÓN QUITAR -->
                   <td>
                     <%= button_to quitar_lista_orden_trabajo_path(ot),
                           method: :patch,
@@ -76,7 +88,9 @@
                   </td>
                 </tr>
               <% end %>
+
             </tbody>
+
           </table>
         <% end %>
       </div>

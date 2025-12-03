@@ -15,13 +15,22 @@ class OrdenTrabajosController < ApplicationController
     end
   end
 
-  def reordenar
-    params[:ids].each_with_index do |id, index|
-      OrdenTrabajo.where(id: id).update_all(position: index + 1)
+  def ordenar_lista
+    ids = params[:ids]
+    lista = params[:lista]
+
+    OrdenTrabajo.transaction do
+      ids.each_with_index do |id, index|
+        ot = OrdenTrabajo.find(id)
+        next unless ot.lista.to_s.include?(lista)
+
+        ot.update!(position: index + 1)
+      end
     end
 
-    render json: { ok: true }
+    render json: { status: "ok" }
   end
+
 
   def panel_listas
     @orden_trabajo = OrdenTrabajo.new
@@ -34,6 +43,19 @@ class OrdenTrabajosController < ApplicationController
     @listas.each do |l|
       @ordenes_por_lista[l] =
         OrdenTrabajo.where("lista LIKE ?", "%#{l}%").order(:position)
+    end    
+  end
+
+  def panel_listas_pdf
+    cargar_listas
+    respond_to do |format|
+      format.pdf do
+        render pdf: "panel_listas",
+               template: "orden_trabajos/panel_listas",
+               layout: false,
+               page_size: "A4",
+               margin: { top: 10, bottom: 10, left: 10, right: 10 }
+      end
     end
   end
 
@@ -275,7 +297,18 @@ class OrdenTrabajosController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
+    def cargar_listas
+      @orden_trabajo = OrdenTrabajo.new
+      @listas = OrdenTrabajo::LIST
+
+      @ordenes_por_lista = {}
+
+      @listas.each do |l|
+        @ordenes_por_lista[l] =
+          OrdenTrabajo.where("lista LIKE ?", "%#{l}%").order(:position)
+      end
+    end
+
     def listado_trabajo
       @orden_trabajos = OrdenTrabajo.order('deadline, clinom')
        respond_to do |format|

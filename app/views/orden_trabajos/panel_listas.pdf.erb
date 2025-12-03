@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+
+  <style>
+    body {
+      font-family: "Helvetica", Arial, sans-serif;
+      font-size: 11px;
+      margin: 20px;
+      color: #222;
+    }
+
+    /* ENCABEZADO */
+    .header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #444;
+      padding-bottom: 6px;
+      margin-bottom: 10px;
+    }
+
+    .header .logo img {
+      height: 55px;
+    }
+
+    .header .titulo {
+      text-align: right;
+    }
+
+    .titulo h1 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .titulo .sub {
+      font-size: 12px;
+      color: #666;
+    }
+
+    /* TABLAS */
+    .titulo-lista {
+      background: #004aad;
+      color: white;
+      padding: 6px;
+      margin-top: 22px;
+      margin-bottom: 6px;
+      border-radius: 4px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 10px;
+      font-size: 10px;
+    }
+
+    th {
+      background: #333;
+      color: white;
+      padding: 5px;
+      border: 1px solid #555;
+    }
+
+    td {
+      border: 1px solid #999;
+      padding: 4px 5px;
+    }
+
+    tr:nth-child(even) {
+      background: #f3f3f3;
+    }
+
+    /* PIE DE PÁGINA */
+    .footer {
+      font-size: 9px;
+      text-align: center;
+      color: #666;
+      margin-top: 20px;
+      border-top: 1px solid #ccc;
+      padding-top: 5px;
+      position: fixed;
+      bottom: 10px;
+      left: 0;
+      right: 0;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ENCABEZADO CON LOGO -->
+  <div class="header">
+    <div class="logo">
+      <!-- ⚠ Cambiá el path al logo que tengas -->
+      <img src="<%= Rails.root.join('app/assets/images/logo.png') %>" alt="Logo">
+    </div>
+
+    <div class="titulo">
+      <h1>Órdenes por Listas</h1>
+      <div class="sub">Panel de Producción – AGCSYS</div>
+      <div class="sub"><%= Time.current.strftime("%d/%m/%Y %H:%M") %></div>
+    </div>
+  </div>
+
+  <!-- CONTENIDO POR LISTA -->
+  <% OrdenTrabajo::LIST.each do |lista| %>
+    
+    <div class="titulo-lista"><%= lista %></div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Pos</th>
+          <th>N° OT</th>
+          <th>Cliente</th>
+          <th>Producto</th>
+          <th>Cant.</th>
+          <th>Papel</th>
+          <th>Gramaje</th>
+          <th>Color</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @ordenes_por_lista[lista].to_a.each do |ot| %>
+          <tr>
+            <td><%= ot.position %></td>
+            <td><%= ot.trnum %></td>
+            <td><%= ot.clinom %></td>
+            <td><%= ot.nomprod %></td>
+            <td><%= ot.trcan %></td>
+            <td><%= ot.papel %></td>
+            <td><%= ot.gramaje %></td>
+            <td><%= ot.colores %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+  <% end %>
+
+  <!-- PIE CON NUMERACIÓN -->
+  <div class="footer">
+    Generado automáticamente por AGCSYS — <%= Time.current.year %><br>
+    Página <span class="page"></span> de <span class="topage"></span>
+  </div>
+
+</body>
+</html>
