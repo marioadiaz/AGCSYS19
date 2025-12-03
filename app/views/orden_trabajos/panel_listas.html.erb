@@ -71,8 +71,17 @@
               <% @ordenes_por_lista[lista].to_a.each do |ot| %>
                 <tr id="ot_<%= ot.id %>" data-id="<%= ot.id %>" draggable="true">
                   <td><%= ot.position %></td>
-                  <td><%= ot.trnum %></td>
-                  <td><%= ot.clinom %></td>
+                  <td class="
+                    <%=
+                      case ot.priority
+                      when 'Alta'  then 'bg-danger text-white'
+                      when 'Media' then 'bg-warning'
+                      else              'bg-success text-white'
+                      end
+                    %>">
+                    <strong><%= ot.trnum %></strong>
+                  </td>
+                  <td><%= link_to ot.clinom, orden_trabajo_path(ot) %></td>
                   <td><%= ot.nomprod %></td>
                   <td><%= ot.trcan %></td>
                   <td><%= ot.papel %></td>
