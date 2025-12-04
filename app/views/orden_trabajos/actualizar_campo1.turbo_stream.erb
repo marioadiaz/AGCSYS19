@@ -1,0 +1,32 @@
+<turbo-stream action="replace" target="ot_<%= @orden_trabajo.id %>">
+  <template>
+    <tr id="ot_<%= @orden_trabajo.id %>">
+      <td><%= @orden_trabajo.position %></td>
+      <td class="
+          <%=
+          case @orden_trabajo.priority
+            when 'Alta'  then 'bg-danger text-white'
+            when 'Media' then 'bg-warning'
+          else              'bg-success text-white'
+          end
+        %>">
+        <strong><%= @orden_trabajo.trnum %></strong>
+      </td>
+      <td><%= link_to @orden_trabajo.clinom, orden_trabajo_path(@orden_trabajo) %></td>
+      <td><%= @orden_trabajo.nomprod %></td>
+      <td><%= @orden_trabajo.trcan %></td>
+      <td><%= @orden_trabajo.papel %></td>
+      <td><%= @orden_trabajo.gramaje %></td>
+      <td><%= @orden_trabajo.colores %></td>
+      <td><%= @orden_trabajo.campo1 %></td>
+      <td>
+        <%= button_to quitar_lista_orden_trabajo_path(@orden_trabajo),
+              method: :patch,
+              class: "btn btn-danger btn-sm",
+              form: { data: { turbo_stream: true } } do %>
+          ❌ Quitar
+        <% end %>
+      </td>
+    </tr>
+  </template>
+</turbo-stream>

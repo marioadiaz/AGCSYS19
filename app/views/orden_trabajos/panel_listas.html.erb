@@ -59,6 +59,9 @@
                 <th>Papel</th>
                 <th>Gramaje</th>
                 <th>Color</th>
+                <% if lista == "CTP" %>
+                  <th>Campo 1</th>
+                <% end %>
                 <th></th>
               </tr>
             </thead>
@@ -87,6 +90,24 @@
                   <td><%= ot.papel %></td>
                   <td><%= ot.gramaje %></td>
                   <td><%= ot.colores %></td>
+                  <% if lista == "CTP" %>
+                    <td>
+                      <%= form_with url: actualizar_campo1_orden_trabajo_path(ot),
+                                    method: :patch,
+                                    data: { turbo_stream: true },
+                                    class: "d-flex" do |f| %>
+
+                        <%= f.text_field :campo1,
+                              value: ot.campo1,
+                              class: "form-control form-control-sm",
+                              placeholder: "Campo 1" %>
+
+                        <%= f.submit "💾",
+                              class: "btn btn-primary btn-sm ms-1" %>
+
+                      <% end %>
+                    </td>
+                  <% end %>
                   <td>
                     <%= button_to quitar_lista_orden_trabajo_path(ot),
                           method: :patch,
