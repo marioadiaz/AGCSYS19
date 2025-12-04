@@ -8,16 +8,16 @@ Rails.application.routes.draw do
   get 'orden_trabajos/panel_listas_pdf', to: 'orden_trabajos#panel_listas_pdf',     as: :panel_listas_pdf_orden_trabajos
 
   resources :orden_trabajos do
+    # ---- RUTAS COLLECTION (sin ID) -------------------------
     collection do
 
       get  :buscar
-
       get  :panel_listas
 
       # 🔁 Reordenamiento con drag & drop
       get  :index_reorder
       post :reorder
-
+      
       # 📅 Vistas específicas
       get :planificacion_taller
       get :planificacion_tallerPDF
@@ -36,9 +36,12 @@ Rails.application.routes.draw do
       get :post7
     end
     
+    # ---- RUTAS MEMBER (actúan sobre un ID) -----------------
     member do
       post :copy          # correcta
       patch :asignar_lista  # CORRECTO
+      patch :actualizar_campo1     # ← corregido: debe ir en member
+      
     end
   end
   
@@ -54,9 +57,11 @@ Rails.application.routes.draw do
   # 🔸 No generan conflictos porque tienen nombres distintos de los helpers Rails estándar
   
   get "index_reorder",             to: "orden_trabajos#index_reorder",          as: :index_reorder
-  post "orden_trabajos/ordenar_lista", to: "orden_trabajos#ordenar_lista", as: :ordenar_lista_orden_trabajos
+  patch "orden_trabajos/ordenar_lista", to: "orden_trabajos#ordenar_lista", as: :ordenar_lista_orden_trabajos
 
   patch "orden_trabajos/:id/quitar_lista", to: "orden_trabajos#quitar_lista", as: :quitar_lista_orden_trabajo  
+
+  
   
   get 'panel_listas',              to: 'orden_trabajos#panel_listas',           as: :panel_listas
 

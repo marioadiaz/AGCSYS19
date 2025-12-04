@@ -179,6 +179,19 @@ class OrdenTrabajosController < ApplicationController
   def edit
   end
 
+  def actualizar_campo1
+    @orden_trabajo = OrdenTrabajo.find(params[:id])
+
+    if @orden_trabajo.update(campo1: params[:campo1])
+      respond_to do |format|
+        format.turbo_stream
+        format.html { redirect_back fallback_location: panel_listas_orden_trabajos_path }
+      end
+    else
+      head :unprocessable_entity
+    end
+  end
+
   # POST /orden_trabajos or /orden_trabajos.json
   def create
     @orden_trabajo = OrdenTrabajo.new(orden_trabajo_params)
