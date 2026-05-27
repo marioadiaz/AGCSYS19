@@ -90,12 +90,23 @@ class OrdenTrabajosController < ApplicationController
   end
 
   def quitar_lista
-    @registro = OrdenTrabajoLista.find(params[:id])
-    @registro.destroy
+    @orden_trabajo = OrdenTrabajo.find(params[:id])
+
+    listas = @orden_trabajo.lista.to_s
+                            .split(",")
+                            .reject(&:blank?)
+
+    listas.pop
+
+    @orden_trabajo.update!(
+      lista: listas.any? ? listas.join(",") + "," : nil
+    )
 
     respond_to do |format|
       format.turbo_stream
-      format.html { redirect_back fallback_location: panel_listas_orden_trabajos_path }
+      format.html do
+        redirect_back fallback_location: panel_listas_orden_trabajos_path
+      end
     end
   end
 
@@ -302,6 +313,19 @@ class OrdenTrabajosController < ApplicationController
   end
 
   private
+
+    def cargar_listas
+      @orden_trabajo = OrdenTrabajo.new
+      @listas = OrdenTrabajo::LIST
+
+      @registros_por_lista = {}
+
+      @listas.each do |l|
+        @registros_por_lista[l] =
+          OrdenTrabajo.where("lista LIKE ?", "%#{l}%")
+                      .order(:position)
+      end
+    end
     
     def listado_trabajo
       @orden_trabajos = OrdenTrabajo.order('deadline, clinom')
