@@ -51,9 +51,7 @@ class OrdenTrabajosController < ApplicationController
 
   def buscar
     q = params[:q].to_s.strip
-    puts "-----------------q: "
-    puts params[:q].to_s.strip
-
+    
     @resultados =
       if q.present?
         OrdenTrabajo.where("trnum::text LIKE ? OR clinom ILIKE ?", "%#{q}%", "%#{q}%").limit(50)
@@ -66,22 +64,28 @@ class OrdenTrabajosController < ApplicationController
 
   def asignar_lista
     @orden_trabajo = OrdenTrabajo.find(params[:id])
-    lista = params[:lista].to_s.strip
 
-    # ¿Ya está asignada a esta lista?
-    unless @orden_trabajo.listas.exists?(lista: lista)
-      OrdenTrabajoLista.create!(
-        orden_trabajo_id: @orden_trabajo.id,
-        lista: lista,
-        position: (OrdenTrabajoLista.where(lista: lista).maximum(:position) || 0) + 1
+    @lista_asignada = params[:lista].to_s.strip
+
+    listas_actuales =
+      @orden_trabajo.lista.to_s
+                    .split(",")
+                    .reject(&:blank?)
+
+    unless listas_actuales.include?(@lista_asignada)
+
+      listas_actuales << @lista_asignada
+
+      @orden_trabajo.update!(
+        lista: listas_actuales.join(",") + ","
       )
     end
 
-    @registro = @orden_trabajo.listas.find_by(lista: lista)
-
     respond_to do |format|
       format.turbo_stream
-      format.html { redirect_back fallback_location: panel_listas_orden_trabajos_path }
+      format.html do
+        redirect_back fallback_location: panel_listas_orden_trabajos_path
+      end
     end
   end
 
