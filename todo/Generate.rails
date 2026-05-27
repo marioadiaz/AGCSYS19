@@ -16,7 +16,22 @@ pin "bootstrap", to: "bootstrap.min.js", preload: true
 
 copiar la carpeta vendor del antiguo proyecto actualizado
 
-bin/rails generate scaffold OrdenTrabajo trnum:integer trcan:integer trcar:date cinom:string papel:string gramaje:integer colores:string pliego:integer nomprod:string fecentr:date cam10:string cam12:string cam24:string procesos:string observaciones:string estado_actual:string estado:boolean deadline:date priority:string lista:string campo1:string campo2:string campo3:string campo4:string campo5:string campo6:string campo7:string campo8:string
+bin/rails generate scaffold OrdenTrabajo trnum:integer trcan:integer trcar:date clinom:string papel:string gramaje:integer colores:string pliego:integer nomprod:string fecentr:date cam10:string cam12:string cam24:string procesos:string observaciones:string estado_actual:string estado:boolean deadline:date priority:string
+
+rails generate migration AddIndexToOrdenTrabajos 
+  def change
+    add_index :orden_trabajos, :clinom, name: "index_orden_trabajos_on_clinom"
+    add_index :orden_trabajos, :trnum, name: "index_orden_trabajos_on_trnum"
+  end
+end
+
+bin/rails g scaffold OrdenTrabajoList orden_trabajo:references lista:string campo1:string campo2:string campo3:string campo4:string campo5:string campo6:string campo7:string campo8:string campo9:string campo10:string campo11:string campo12:string campo13:string campo14:string campo15:string campo16:string campo17:string campo18:string campo19:string campo20:string campo21:string campo22:string fecha_list:date
+
+rails generate migration AddIndexToOrdenTrabajosList
+  def change
+    add_index :orden_trabajo_lists, [:orden_trabajo_id, :lista], unique: true
+  end
+end
 
 
   bin/rails db:migrate

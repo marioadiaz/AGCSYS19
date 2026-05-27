@@ -1,18 +1,18 @@
-// app/javascript/controllers/buscar_ot_controller.js
 import { Controller } from "@hotwired/stimulus"
+import { Turbo } from "@hotwired/turbo-rails"
 
 export default class extends Controller {
-  static targets = ["input", "resultados", "lista"]
 
-  connect() {
-    console.log("🟢 Controlador buscar-ot CONECTADO")
-  }
+  static targets = ["input", "lista", "resultados"]
 
   buscar() {
-    const query = this.inputTarget.value.trim()
-    const lista  = this.listaTarget?.value?.trim() || ""
+    const query = this.hasInputTarget
+      ? this.inputTarget.value.trim()
+      : ""
 
-    console.log("🔎 Buscando:", query, "| Lista:", lista)
+    const lista = this.hasListaTarget
+      ? this.listaTarget.value.trim()
+      : ""
 
     fetch(`/orden_trabajos/buscar?q=${encodeURIComponent(query)}&lista=${encodeURIComponent(lista)}`, {
       headers: {
@@ -21,35 +21,31 @@ export default class extends Controller {
       }
     })
       .then(r => r.text())
-      .then(html => {
-        Turbo.renderStreamMessage(html)
-      })
+      .then(html => Turbo.renderStreamMessage(html))
   }
 
   asignar(event) {
     event.preventDefault()
 
-    const button = event.currentTarget
-    const otId   = button.dataset.otId
-    const lista  = this.listaTarget?.value?.trim() || ""
+    const otId = event.currentTarget.dataset.otId
 
-    if (!lista) {
-      alert("Seleccioná una lista en el desplegable antes de asignar.")
-      return
-    }
+    const lista = this.hasListaTarget
+      ? this.listaTarget.value.trim()
+      : ""
 
-    console.log("✅ Asignando OT", otId, "a lista", lista)
-
-    const token = document.querySelector("meta[name='csrf-token']")?.content
+    console.log("Asignando:", otId, "a", lista)
 
     fetch(`/orden_trabajos/${otId}/asignar_lista`, {
       method: "PATCH",
       headers: {
+        "Content-Type": "application/json",
         "Accept": "text/vnd.turbo-stream.html",
-        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-        "X-CSRF-Token": token
+        "X-Requested-With": "XMLHttpRequest",
+        "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content
       },
-      body: new URLSearchParams({ lista })
+      body: JSON.stringify({
+        lista: lista
+      })
     })
       .then(r => r.text())
       .then(html => {

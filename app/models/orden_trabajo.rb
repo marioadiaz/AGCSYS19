@@ -2,6 +2,7 @@ class OrdenTrabajo < ApplicationRecord
   # ----------------------------------------------------------------
   # 🔹 Validaciones básicas (aseguran calidad de datos importados)
   # ----------------------------------------------------------------
+  has_many :orden_trabajo_listas, dependent: :destroy
   
   validates :clinom, presence: true
   validates :nomprod, presence: true

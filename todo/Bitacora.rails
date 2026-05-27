@@ -249,3 +249,7 @@ create_table "orden_trabajos", force: :cascade do |t|
     "Anilladora Manual","Tareas de Mantenimiento") 
 
     y cada tabla debe tener los siguientes campos (donde las filas se puedan reordenar usando stimulus): Posición (postition)   N° OT (trnum) Cliente (clinom) Producto (nomprod)  Cantidad (trcan)  Papel (papel) Gramaje (gramaje) Color (colores)
+
+
+    rails generate migration AddFechaJtToOrdenTrabajos
+    t.date :fecha_jt
