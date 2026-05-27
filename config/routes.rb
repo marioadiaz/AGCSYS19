@@ -40,7 +40,7 @@ Rails.application.routes.draw do
     # ---- RUTAS MEMBER (actúan sobre un ID) -----------------
     member do
       post :copy          # correcta
-      post :asignar_lista  # CORRECTO
+      patch :asignar_lista  # CORRECTO
       patch :actualizar_campos     # ← corregido: debe ir en member
       
     end

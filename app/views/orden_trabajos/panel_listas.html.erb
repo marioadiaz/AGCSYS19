@@ -43,10 +43,11 @@
               target: "_blank" %>
       </div>
     </div>
+
+    <div id="resultados_busqueda" class="mt-3"
+       data-buscar-ot-target="resultados"></div>
   </div>
 
-  <div id="resultados_busqueda" class="mt-3"
-       data-buscar-ot-target="resultados"></div>
 
   <!-- ===================================== -->
   <!-- TABLAS POR LISTA -->
@@ -67,32 +68,20 @@
             <th>Cantidad</th>
             <th>Papel</th>
             <th>Gramaje</th>
-            <th>Color</th>
-
-            <!-- CAMPOS EXTRA POR LISTA -->
-            <% extra = OrdenTrabajosHelper::CAMPOS_FORM[lista] || [] %>
-            <% extra.each do |campo, label| %>
-              <th><%= label %></th>
-            <% end %>
-
-            
+            <th>Color</th>        
             <th></th>
             <th></th>
           </tr>
         </thead>
-
         <tbody
               id="tabla_lista_<%= lista.parameterize(separator: '_') %>"
               data-controller="sortable"
               data-sortable-target="tbody"
               data-sortable-url-value="<%= ordenar_lista_orden_trabajos_path(lista: lista) %>"
             >
-
           <% registros.each do |reg| %>
             <% ot = reg.orden_trabajo %>
-
             <tr id="registro_<%= reg.id %>" data-id="<%= reg.id %>">
-
               <!-- CAMPOS DE ORDEN_TRABAJO -->
               <td class="<%= ot.priority == 'Alta' ? 'bg-danger text-white' : ot.priority=='Media' ? 'bg-warning' : 'bg-success text-white' %> fw-bold">
                 <%= ot.trnum %>
@@ -103,15 +92,10 @@
               <td><%= ot.papel %></td>
               <td><%= ot.gramaje %></td>
               <td><%= ot.colores %></td>
-
-
-
             </tr>
           <% end %>
-
         </tbody>
       </table>
     <% end %>
-
   </div>
 </div>
