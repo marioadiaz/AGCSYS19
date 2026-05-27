@@ -42,6 +42,7 @@ Rails.application.routes.draw do
       post :copy          # correcta
       patch :asignar_lista  # CORRECTO
       patch :actualizar_campos     # ← corregido: debe ir en member
+      delete :quitar_lista     # CORRECTO
       
     end
   end
@@ -60,7 +61,7 @@ Rails.application.routes.draw do
   get "index_reorder",             to: "orden_trabajos#index_reorder",          as: :index_reorder
   #patch "orden_trabajos/ordenar_lista", to: "orden_trabajos#ordenar_lista", as: :ordenar_lista_orden_trabajos
 
-  patch "orden_trabajos/:id/quitar_lista", to: "orden_trabajos#quitar_lista", as: :quitar_lista_orden_trabajo  
+  #patch "orden_trabajos/:id/quitar_lista", to: "orden_trabajos#quitar_lista", as: :quitar_lista_orden_trabajo  
 
   get 'panel_listas',              to: 'orden_trabajos#panel_listas',           as: :panel_listas
 
