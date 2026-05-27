@@ -10,9 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_28_193108) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_27_035419) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "orden_trabajo_listas", force: :cascade do |t|
+    t.bigint "orden_trabajo_id", null: false
+    t.string "lista", null: false
+    t.string "estado_interno"
+    t.string "campo2"
+    t.date "fecha_list"
+    t.integer "position"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["orden_trabajo_id", "lista"], name: "index_orden_trabajo_listas_on_orden_trabajo_id_and_lista", unique: true
+    t.index ["orden_trabajo_id"], name: "index_orden_trabajo_listas_on_orden_trabajo_id"
+  end
 
   create_table "orden_trabajos", force: :cascade do |t|
     t.integer "trnum"
@@ -35,18 +48,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_28_193108) do
     t.date "deadline"
     t.string "priority"
     t.string "lista"
-    t.string "campo1"
-    t.string "campo2"
-    t.string "campo3"
-    t.string "campo4"
-    t.string "campo5"
-    t.string "campo6"
-    t.string "campo7"
-    t.string "campo8"
     t.integer "position"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["clinom"], name: "index_orden_trabajos_on_clinom"
     t.index ["trnum"], name: "index_orden_trabajos_on_trnum"
   end
+
+  add_foreign_key "orden_trabajo_listas", "orden_trabajos"
 end

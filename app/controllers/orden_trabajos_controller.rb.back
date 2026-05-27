@@ -16,24 +16,34 @@ class OrdenTrabajosController < ApplicationController
   end
 
   def ordenar_lista
+    ids = params[:ids]
     lista = params[:lista]
-    orden = params[:order] || []
 
-    orden.each_with_index do |registro_id, index|
-      OrdenTrabajoLista.where(id: registro_id).update_all(position: index + 1)
+    OrdenTrabajo.transaction do
+      ids.each_with_index do |id, index|
+        ot = OrdenTrabajo.find(id)
+        next unless ot.lista.to_s.include?(lista)
+
+        ot.update!(position: index + 1)
+      end
     end
 
-    head :ok
+    render json: { status: "ok" }
   end
 
+
   def panel_listas
+    @orden_trabajo = OrdenTrabajo.new
     @listas = OrdenTrabajo::LIST
 
-    # Agrupar registros por lista
-    @registros_por_lista = OrdenTrabajoLista
-                             .includes(:orden_trabajo)
-                             .order(:position)
-                             .group_by(&:lista)
+    # Inicializamos el hash vacío
+    @ordenes_por_lista = {}
+
+    # Cargamos las órdenes por lista
+    @listas.each do |l|
+      @ordenes_por_lista[l] =
+        OrdenTrabajo.where("lista LIKE ?", "%#{l}%").order(:position)
+    end    
   end
 
   def panel_listas_pdf
@@ -51,8 +61,6 @@ class OrdenTrabajosController < ApplicationController
 
   def buscar
     q = params[:q].to_s.strip
-    puts "-----------------q: "
-    puts params[:q].to_s.strip
 
     @resultados =
       if q.present?
@@ -65,33 +73,38 @@ class OrdenTrabajosController < ApplicationController
   end
 
   def asignar_lista
-    @orden_trabajo = OrdenTrabajo.find(params[:id])
-    lista = params[:lista].to_s.strip
+    @orden_trabajo   = OrdenTrabajo.find(params[:id])
+    @lista_asignada  = params[:lista].to_s.strip
 
-    # ¿Ya está asignada a esta lista?
-    unless @orden_trabajo.listas.exists?(lista: lista)
-      OrdenTrabajoLista.create!(
-        orden_trabajo_id: @orden_trabajo.id,
-        lista: lista,
-        position: (OrdenTrabajoLista.where(lista: lista).maximum(:position) || 0) + 1
-      )
+    if @lista_asignada.present?
+      listas_actuales = @orden_trabajo.lista.to_s.split(",").reject(&:blank?)
+      unless listas_actuales.include?(@lista_asignada)
+        listas_actuales << @lista_asignada
+        @orden_trabajo.update(lista: listas_actuales.join(",") + ",")
+      end
     end
 
-    @registro = @orden_trabajo.listas.find_by(lista: lista)
-
     respond_to do |format|
-      format.turbo_stream
-      format.html { redirect_back fallback_location: panel_listas_orden_trabajos_path }
+      format.turbo_stream   # asignar_lista.turbo_stream.erb
+      format.html { redirect_back fallback_location: panel_listas_orden_trabajos_path, notice: "Asignado correctamente." }
     end
   end
 
   def quitar_lista
-    @registro = OrdenTrabajoLista.find(params[:id])
-    @registro.destroy
+    @orden_trabajo = OrdenTrabajo.find(params[:id])
+
+    # Listas actuales como array limpio
+    listas = @orden_trabajo.lista.to_s.split(",").reject(&:blank?)
+
+    # Quitamos la ÚLTIMA lista
+    listas.pop
+
+    # Guardamos el nuevo valor (si queda vacío, guardamos nil)
+    @orden_trabajo.update(lista: listas.any? ? listas.join(",") + "," : nil)
 
     respond_to do |format|
       format.turbo_stream
-      format.html { redirect_back fallback_location: panel_listas_orden_trabajos_path }
+      format.html { redirect_back fallback_location: panel_listas_orden_trabajos_path, notice: "Quitado correctamente." }
     end
   end
 
@@ -166,17 +179,21 @@ class OrdenTrabajosController < ApplicationController
   def edit
   end
 
-  def actualizar_campos
-    @registro = OrdenTrabajoLista.find(params[:id])
+  def actualizar_campo1
+    @orden_trabajo = OrdenTrabajo.find(params[:id])
 
-    permitidos = params.require(:orden_trabajo_listas)
-                       .permit(*campos_dinamicos_permitidos)
+    @orden_trabajo.update(campo1: params[:campo1])
 
-    @registro.update(permitidos)
+    # ← Extraemos la lista correcta desde el registro
+    @lista_actual = @orden_trabajo.lista.to_s.split(",").last
 
-    respond_to do |format|
-      format.turbo_stream
-      format.html { redirect_back fallback_location: panel_listas_orden_trabajos_path }
+    if @orden_trabajo.update(campo1: params[:campo1])
+      respond_to do |format|
+        format.turbo_stream
+        format.html { redirect_back fallback_location: panel_listas_orden_trabajos_path }
+      end
+    else
+      head :unprocessable_entity
     end
   end
 
@@ -298,14 +315,25 @@ class OrdenTrabajosController < ApplicationController
   end
 
   private
-    
+    def cargar_listas
+      @orden_trabajo = OrdenTrabajo.new
+      @listas = OrdenTrabajo::LIST
+
+      @ordenes_por_lista = {}
+
+      @listas.each do |l|
+        @ordenes_por_lista[l] =
+          OrdenTrabajo.where("lista LIKE ?", "%#{l}%").order(:position)
+      end
+    end
+
     def listado_trabajo
       @orden_trabajos = OrdenTrabajo.order('deadline, clinom')
-         respond_to do |format|
-        format.html
-        format.js
-        format.json { render json: @orden_trabajos}
-      end
+       respond_to do |format|
+      format.html
+      format.js
+      format.json { render json: @orden_trabajos}
+    end
     end
 
     def listado_excel1
@@ -313,23 +341,11 @@ class OrdenTrabajosController < ApplicationController
     end
 
     def set_orden_trabajo
-      @orden_trabajo = OrdenTrabajo.find(params[:id])
+      @orden_trabajo = OrdenTrabajo.find(params.expect(:id))
     end
 
     # Only allow a list of trusted parameters through.
-    def campos_dinamicos_permitidos
-      # extraer todos los símbolos del hash CAMPOS_FORM
-      campos = OrdenTrabajosHelper::CAMPOS_FORM.values.flatten(1).map(&:first)
-
-      campos
-    end
-
-    # Campos del modelo principal OrdenTrabajo (para create/update)
     def orden_trabajo_params
-      params.require(:orden_trabajo).permit(
-        :trnum, :trcan, :trcar, :clinom, :papel, :gramaje, :colores,
-        :pliego, :nomprod, :fecentr, :procesos, :observaciones,
-        :estado_actual, :estado, :deadline, :priority
-      )
+      params.expect(orden_trabajo: [ :trnum, :trcan, :trcar, :clinom, :papel, :gramaje, :colores, :pliego, :nomprod, :fecentr, :cam10, :cam12, :cam24, :procesos, :observaciones, :estado_actual, :estado, :deadline, :priority ])
     end
 end
