@@ -1,9 +1,9 @@
-<tr id="ot_<%= ot.id %>" data-id="<%= ot.id %>" draggable="true">
+<% ot = reg.orden_trabajo %>
+<tr id="registro_<%= reg.id %>" data-id="<%= reg.id %>">
   
-
   <td class="
     <%=
-      case ot.priority
+      case reg.orden_trabajo.priority
       when 'Alta'  then 'bg-danger text-white'
       when 'Media' then 'bg-warning'
       else              'bg-success text-white'
@@ -20,8 +20,8 @@
   <td><%= ot.gramaje %></td>
   <td><%= ot.colores %></td>
   <td>
-    <%= button_to quitar_lista_orden_trabajo_path(ot),
-          method: :patch,
+    <%= button_to quitar_lista_orden_trabajo_path(reg),
+          method: :delete,
           class: "btn btn-danger btn-sm",
           form: { data: { turbo_stream: true } } do %>
       ❌ Quitar

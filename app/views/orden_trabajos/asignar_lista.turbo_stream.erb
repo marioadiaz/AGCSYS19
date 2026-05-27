@@ -1,11 +1,8 @@
-<%= turbo_stream.remove dom_id(@orden_trabajo) %>
-
 <%= turbo_stream.prepend(
       "tabla_lista_#{@lista_asignada.parameterize(separator: '_')}",
       partial: "orden_trabajos/fila_lista",
       locals: {
-        ot: @orden_trabajo,
-        lista: @lista_asignada
+        reg: @registro
       }
     )
 %>

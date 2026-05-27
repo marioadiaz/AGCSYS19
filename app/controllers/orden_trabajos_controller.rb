@@ -67,18 +67,12 @@ class OrdenTrabajosController < ApplicationController
 
     @lista_asignada = params[:lista].to_s.strip
 
-    listas_actuales =
-      @orden_trabajo.lista.to_s
-                    .split(",")
-                    .reject(&:blank?)
-
-    unless listas_actuales.include?(@lista_asignada)
-
-      listas_actuales << @lista_asignada
-
-      @orden_trabajo.update!(
-        lista: listas_actuales.join(",") + ","
-      )
+    @registro = OrdenTrabajoLista.find_or_create_by!(
+      orden_trabajo: @orden_trabajo,
+      lista: @lista_asignada
+    ) do |r|
+      r.position =
+      OrdenTrabajoLista.where(lista: @lista_asignada).maximum(:position).to_i + 1
     end
 
     respond_to do |format|
@@ -90,17 +84,9 @@ class OrdenTrabajosController < ApplicationController
   end
 
   def quitar_lista
-    @orden_trabajo = OrdenTrabajo.find(params[:id])
+    @registro = OrdenTrabajoLista.find(params[:id])
 
-    listas = @orden_trabajo.lista.to_s
-                            .split(",")
-                            .reject(&:blank?)
-
-    listas.pop
-
-    @orden_trabajo.update!(
-      lista: listas.any? ? listas.join(",") + "," : nil
-    )
+    @registro.destroy
 
     respond_to do |format|
       format.turbo_stream
@@ -315,16 +301,13 @@ class OrdenTrabajosController < ApplicationController
   private
 
     def cargar_listas
-      @orden_trabajo = OrdenTrabajo.new
       @listas = OrdenTrabajo::LIST
 
-      @registros_por_lista = {}
-
-      @listas.each do |l|
-        @registros_por_lista[l] =
-          OrdenTrabajo.where("lista LIKE ?", "%#{l}%")
-                      .order(:position)
-      end
+      @registros_por_lista =
+        OrdenTrabajoLista
+          .includes(:orden_trabajo)
+          .order(:position)
+          .group_by(&:lista)
     end
     
     def listado_trabajo
