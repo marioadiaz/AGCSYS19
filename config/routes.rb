@@ -13,11 +13,10 @@ Rails.application.routes.draw do
 
       get  :buscar
       get  :panel_listas
+      get  :panel_listas_pdf
 
       # 🔁 Reordenamiento con drag & drop
-      get  :index_reorder
-      post :reorder
-      post :ordenar_lista
+      patch :ordenar_lista
       
       # 📅 Vistas específicas
       get :planificacion_taller
@@ -41,7 +40,6 @@ Rails.application.routes.draw do
     member do
       post :copy          # correcta
       patch :asignar_lista  # CORRECTO
-      patch :actualizar_campos     # ← corregido: debe ir en member
       delete :quitar_lista     # CORRECTO
       
     end
@@ -58,11 +56,6 @@ Rails.application.routes.draw do
   # 🔸 Estas rutas son alias que apuntan a las acciones del mismo controlador
   # 🔸 No generan conflictos porque tienen nombres distintos de los helpers Rails estándar
   
-  get "index_reorder",             to: "orden_trabajos#index_reorder",          as: :index_reorder
-  #patch "orden_trabajos/ordenar_lista", to: "orden_trabajos#ordenar_lista", as: :ordenar_lista_orden_trabajos
-
-  #patch "orden_trabajos/:id/quitar_lista", to: "orden_trabajos#quitar_lista", as: :quitar_lista_orden_trabajo  
-
   get 'panel_listas',              to: 'orden_trabajos#panel_listas',           as: :panel_listas
 
   get 'listado',                   to: 'orden_trabajos#listado',                as: :listado

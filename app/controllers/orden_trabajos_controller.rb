@@ -16,14 +16,17 @@ class OrdenTrabajosController < ApplicationController
   end
 
   def ordenar_lista
-    lista = params[:lista]
+    Rails.logger.info "PARAMS ORDER: #{params[:order].inspect}"
+
     orden = params[:order] || []
 
     orden.each_with_index do |registro_id, index|
-      OrdenTrabajoLista.where(id: registro_id).update_all(position: index + 1)
+      OrdenTrabajoLista
+        .where(id: registro_id)
+        .update_all(position: index + 1)
     end
 
-    head :ok
+    render json: { ok: true }
   end
 
   def panel_listas
