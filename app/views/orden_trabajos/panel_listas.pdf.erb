@@ -1,156 +1,186 @@
+```erb
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
 
   <style>
-    body {
-      font-family: "Helvetica", Arial, sans-serif;
+    body{
+      font-family: Arial, Helvetica, sans-serif;
       font-size: 11px;
-      margin: 20px;
       color: #222;
     }
 
-    /* ENCABEZADO */
-    .header {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 2px solid #444;
-      padding-bottom: 6px;
-      margin-bottom: 10px;
+    h1{
+      text-align:center;
+      margin-bottom: 25px;
+      border-bottom: 2px solid #000;
+      padding-bottom: 10px;
     }
 
-    .header .logo img {
-      height: 55px;
-    }
-
-    .header .titulo {
-      text-align: right;
-    }
-
-    .titulo h1 {
-      margin: 0;
-      font-size: 20px;
-      font-weight: bold;
-    }
-
-    .titulo .sub {
-      font-size: 12px;
-      color: #666;
-    }
-
-    /* TABLAS */
-    .titulo-lista {
-      background: #004aad;
+    .lista-title{
+      background: #0d6efd;
       color: white;
-      padding: 6px;
-      margin-top: 22px;
-      margin-bottom: 6px;
-      border-radius: 4px;
-      text-align: center;
-      font-size: 14px;
+      padding: 8px;
+      font-size: 16px;
       font-weight: bold;
+      margin-top: 30px;
+      margin-bottom: 10px;
+      border-radius: 4px;
     }
 
-    table {
+    table{
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: 10px;
+      margin-bottom: 25px;
+    }
+
+    th{
+      background: #343a40;
+      color: white;
+      padding: 6px;
+      border: 1px solid #999;
       font-size: 10px;
     }
 
-    th {
-      background: #333;
-      color: white;
+    td{
+      border: 1px solid #cfcfcf;
       padding: 5px;
-      border: 1px solid #555;
+      font-size: 10px;
     }
 
-    td {
-      border: 1px solid #999;
-      padding: 4px 5px;
+    .text-center{
+      text-align:center;
     }
 
-    tr:nth-child(even) {
-      background: #f3f3f3;
+    .priority-alta{
+      background: #dc3545;
+      color: white;
+      font-weight: bold;
     }
 
-    /* PIE DE PÁGINA */
-    .footer {
-      font-size: 9px;
-      text-align: center;
-      color: #666;
-      margin-top: 20px;
-      border-top: 1px solid #ccc;
-      padding-top: 5px;
+    .priority-media{
+      background: #ffc107;
+      font-weight: bold;
+    }
+
+    .priority-baja{
+      background: #198754;
+      color: white;
+      font-weight: bold;
+    }
+
+    .footer{
       position: fixed;
-      bottom: 10px;
+      bottom: -10px;
       left: 0;
       right: 0;
+      text-align: right;
+      font-size: 9px;
+      color: #666;
+    }
+
+    .small{
+      font-size: 9px;
     }
   </style>
 </head>
 
 <body>
 
-  <!-- ENCABEZADO CON LOGO -->
-  <div class="header">
-    <div class="logo">
-      <!-- ⚠ Cambiá el path al logo que tengas -->
-      <img src="<%= Rails.root.join('app/assets/images/logo.png') %>" alt="Logo">
-    </div>
+  <h1>
+    🔀 Órdenes de Trabajo por Listas
+  </h1>
 
-    <div class="titulo">
-      <h1>Órdenes por Listas</h1>
-      <div class="sub">Panel de Producción – AGCSYS</div>
-      <div class="sub"><%= Time.current.strftime("%d/%m/%Y %H:%M") %></div>
-    </div>
-  </div>
+  <p class="small">
+    Fecha de impresión:
+    <%= Time.current.strftime("%d/%m/%Y %H:%M") %>
+  </p>
 
-  <!-- CONTENIDO POR LISTA -->
-  <% OrdenTrabajo::LIST.each do |lista| %>
-    
-    <div class="titulo-lista"><%= lista %></div>
+  <% @listas.each do |lista| %>
+
+    <% registros = @registros_por_lista[lista] || [] %>
+
+    <% next if registros.empty? %>
+
+    <div class="lista-title">
+      <%= lista %>
+    </div>
 
     <table>
+
       <thead>
         <tr>
-          <th>Pos</th>
-          <th>N° OT</th>
-          <th>Cliente</th>
-          <th>Producto</th>
-          <th>Cant.</th>
-          <th>Papel</th>
-          <th>Gramaje</th>
-          <th>Color</th>
+          <th width="8%">OT</th>
+          <th width="20%">Cliente</th>
+          <th width="22%">Producto</th>
+          <th width="10%">Cantidad</th>
+          <th width="15%">Papel</th>
+          <th width="10%">Gramaje</th>
+          <th width="15%">Color</th>
         </tr>
       </thead>
 
       <tbody>
-        <% @registros_por_lista[lista].to_a.each do |ot| %>
+
+        <% registros.each do |reg| %>
+
+          <% ot = reg.orden_trabajo %>
+
           <tr>
-            <td><%= ot.position %></td>
-            <td><%= ot.trnum %></td>
-            <td><%= ot.clinom %></td>
-            <td><%= ot.nomprod %></td>
-            <td><%= ot.trcan %></td>
-            <td><%= ot.papel %></td>
-            <td><%= ot.gramaje %></td>
-            <td><%= ot.colores %></td>
+
+            <td class="
+              text-center
+              <%= case ot.priority
+                    when 'Alta'
+                      'priority-alta'
+                    when 'Media'
+                      'priority-media'
+                    else
+                      'priority-baja'
+                  end %>
+            ">
+              <%= ot.trnum %>
+            </td>
+
+            <td>
+              <%= ot.clinom %>
+            </td>
+
+            <td>
+              <%= ot.nomprod %>
+            </td>
+
+            <td class="text-center">
+              <%= number_with_delimiter(ot.trcan) %>
+            </td>
+
+            <td>
+              <%= ot.papel %>
+            </td>
+
+            <td class="text-center">
+              <%= ot.gramaje %>
+            </td>
+
+            <td>
+              <%= ot.colores %>
+            </td>
+
           </tr>
+
         <% end %>
+
       </tbody>
+
     </table>
 
   <% end %>
 
-  <!-- PIE CON NUMERACIÓN -->
   <div class="footer">
-    Generado automáticamente por AGCSYS — <%= Time.current.year %><br>
-    Página <span class="page"></span> de <span class="topage"></span>
+    AGCSYS19
   </div>
 
 </body>
 </html>
+```
