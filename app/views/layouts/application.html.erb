@@ -19,8 +19,8 @@
 
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>    
-    <%= javascript_include_tag "jquery.min", defer: false %>
-    <%= javascript_include_tag "bootstrap.bundle.min", preload: false, defer: false %>
+    <%= javascript_include_tag "jquery.min", defer: true %>
+    <%= javascript_include_tag "bootstrap.bundle.min", defer: true %>
     <%= javascript_include_tag "bootstrap-select.min", defer: true %>
 
     <%= javascript_importmap_tags %>

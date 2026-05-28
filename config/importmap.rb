@@ -18,3 +18,4 @@ pin "custom/scroll_top", to: "custom/scroll_top.js"
 pin "custom/buscador_datos", to: "custom/buscador_datos.js"
 pin "custom/selectpicker", to: "custom/selectpicker.js"
 
+pin "sortablejs" # @1.15.7
