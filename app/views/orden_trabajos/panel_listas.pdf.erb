@@ -1,45 +1,75 @@
-```erb
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
 
   <style>
+
     body{
       font-family: Arial, Helvetica, sans-serif;
-      font-size: 11px;
+      font-size: 10px;
       color: #222;
+      margin: 0;
+      padding: 0;
     }
 
-    h1{
-      text-align:center;
-      margin-bottom: 25px;
+    .page{
+      page-break-after: always;
+      width: 100%;
+    }
+
+    .page:last-child{
+      page-break-after: avoid;
+    }
+
+    .header{
       border-bottom: 2px solid #000;
+      margin-bottom: 15px;
       padding-bottom: 10px;
+    }
+
+    .title{
+      font-size: 22px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 5px;
+    }
+
+    .subtitle{
+      text-align: center;
+      font-size: 12px;
+      color: #555;
+    }
+
+    .info{
+      margin-top: 10px;
+      font-size: 10px;
     }
 
     .lista-title{
       background: #0d6efd;
       color: white;
-      padding: 8px;
-      font-size: 16px;
+      padding: 10px;
+      font-size: 18px;
       font-weight: bold;
-      margin-top: 30px;
-      margin-bottom: 10px;
-      border-radius: 4px;
+      text-align: center;
+      margin-bottom: 15px;
     }
 
     table{
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: 25px;
+    }
+
+    thead{
+      display: table-header-group;
     }
 
     th{
       background: #343a40;
       color: white;
-      padding: 6px;
       border: 1px solid #999;
+      padding: 6px;
       font-size: 10px;
     }
 
@@ -47,10 +77,11 @@
       border: 1px solid #cfcfcf;
       padding: 5px;
       font-size: 10px;
+      vertical-align: middle;
     }
 
     .text-center{
-      text-align:center;
+      text-align: center;
     }
 
     .priority-alta{
@@ -72,7 +103,7 @@
 
     .footer{
       position: fixed;
-      bottom: -10px;
+      bottom: 0;
       left: 0;
       right: 0;
       text-align: right;
@@ -83,42 +114,63 @@
     .small{
       font-size: 9px;
     }
+
   </style>
 </head>
 
 <body>
 
-  <h1>
-    🔀 Órdenes de Trabajo por Listas
-  </h1>
+<% @listas.each do |lista| %>
 
-  <p class="small">
-    Fecha de impresión:
-    <%= Time.current.strftime("%d/%m/%Y %H:%M") %>
-  </p>
+  <% registros = @registros_por_lista[lista] || [] %>
 
-  <% @listas.each do |lista| %>
+  <% next if registros.empty? %>
 
-    <% registros = @registros_por_lista[lista] || [] %>
+  <div class="page">
 
-    <% next if registros.empty? %>
+    <!-- HEADER -->
+
+    <div class="header">
+
+      <div class="title">
+        AGCSYS19
+      </div>
+
+      <div class="subtitle">
+        Panel de Órdenes de Trabajo por Lista
+      </div>
+
+      <div class="info">
+        Fecha:
+        <strong>
+          <%= Time.current.strftime("%d/%m/%Y %H:%M") %>
+        </strong>
+      </div>
+
+    </div>
+
+    <!-- TITULO LISTA -->
 
     <div class="lista-title">
-      <%= lista %>
+      LISTA: <%= lista %>
     </div>
+
+    <!-- TABLA -->
 
     <table>
 
       <thead>
+
         <tr>
-          <th width="8%">OT</th>
+          <th width="7%">OT</th>
           <th width="20%">Cliente</th>
-          <th width="22%">Producto</th>
+          <th width="28%">Producto</th>
           <th width="10%">Cantidad</th>
           <th width="15%">Papel</th>
-          <th width="10%">Gramaje</th>
-          <th width="15%">Color</th>
+          <th width="8%">Gramaje</th>
+          <th width="12%">Color</th>
         </tr>
+
       </thead>
 
       <tbody>
@@ -128,6 +180,8 @@
           <% ot = reg.orden_trabajo %>
 
           <tr>
+
+            <!-- OT -->
 
             <td class="
               text-center
@@ -143,25 +197,37 @@
               <%= ot.trnum %>
             </td>
 
+            <!-- CLIENTE -->
+
             <td>
               <%= ot.clinom %>
             </td>
+
+            <!-- PRODUCTO -->
 
             <td>
               <%= ot.nomprod %>
             </td>
 
+            <!-- CANTIDAD -->
+
             <td class="text-center">
               <%= number_with_delimiter(ot.trcan) %>
             </td>
+
+            <!-- PAPEL -->
 
             <td>
               <%= ot.papel %>
             </td>
 
+            <!-- GRAMAJE -->
+
             <td class="text-center">
               <%= ot.gramaje %>
             </td>
+
+            <!-- COLOR -->
 
             <td>
               <%= ot.colores %>
@@ -175,12 +241,14 @@
 
     </table>
 
-  <% end %>
-
-  <div class="footer">
-    AGCSYS19
   </div>
+
+<% end %>
+
+<div class="footer">
+  AGCSYS19
+</div>
 
 </body>
 </html>
-```
+
