@@ -40,14 +40,27 @@ class OrdenTrabajosController < ApplicationController
   end
 
   def panel_listas_pdf
+
     cargar_listas
+
     respond_to do |format|
       format.pdf do
         render pdf: "panel_listas",
-               template: "orden_trabajos/panel_listas",
+               template: "orden_trabajos/panel_listas_pdf",
                layout: false,
                page_size: "A4",
-               margin: { top: 10, bottom: 10, left: 10, right: 10 }
+               orientation: "Landscape",
+               margin: {
+                 top: 8,
+                 bottom: 8,
+                 left: 8,
+                 right: 8
+               },
+               footer: {
+                 right: "Página [page] de [topage]",
+                 font_size: 8,
+                 spacing: 3
+               }
       end
     end
   end
