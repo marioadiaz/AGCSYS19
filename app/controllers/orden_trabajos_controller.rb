@@ -40,13 +40,13 @@ class OrdenTrabajosController < ApplicationController
   end
 
   def panel_listas_pdf
-
+    
     cargar_listas
-
+    
     respond_to do |format|
       format.pdf do
         render pdf: "panel_listas",
-               template: "orden_trabajos/panel_listas_pdf",
+               template: "orden_trabajos/panel_listas",
                layout: false,
                page_size: "A4",
                orientation: "Landscape",
