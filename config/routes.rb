@@ -5,13 +5,13 @@ Rails.application.routes.draw do
   # =========================================================
   # 📦 ÓRDENES DE TRABAJO
   # =========================================================
-  get 'orden_trabajos/panel_listas_pdf', to: 'orden_trabajos#panel_listas_pdf',     as: :panel_listas_pdf_orden_trabajos
-
+  
   resources :orden_trabajos do
     # ---- RUTAS COLLECTION (sin ID) -------------------------
     collection do
 
       get  :buscar
+
       get  :panel_listas
       get  :panel_listas_pdf
 
@@ -42,6 +42,7 @@ Rails.application.routes.draw do
       patch :asignar_lista  # CORRECTO
       delete :quitar_lista     # CORRECTO
       
+      patch :actualizar_campos
     end
   end
   
@@ -56,22 +57,23 @@ Rails.application.routes.draw do
   # 🔸 Estas rutas son alias que apuntan a las acciones del mismo controlador
   # 🔸 No generan conflictos porque tienen nombres distintos de los helpers Rails estándar
   
-  get 'panel_listas',              to: 'orden_trabajos#panel_listas',           as: :panel_listas
+  get 'panel_listas',                    to: 'orden_trabajos#panel_listas',           as: :panel_listas
+  #get 'orden_trabajos/panel_listas_pdf', to: 'orden_trabajos#panel_listas_pdf',     as: :panel_listas_pdf_orden_trabajos
 
-  get 'listado',                   to: 'orden_trabajos#listado',                as: :listado
-  get 'offset1',                   to: 'orden_trabajos#offset1',                as: :offset1
-  get 'offset2',                   to: 'orden_trabajos#offset2',                as: :offset2
-  get 'digital',                   to: 'orden_trabajos#digital',                as: :digital
+  get 'listado',                         to: 'orden_trabajos#listado',                as: :listado
+  get 'offset1',                         to: 'orden_trabajos#offset1',                as: :offset1
+  get 'offset2',                         to: 'orden_trabajos#offset2',                as: :offset2
+  get 'digital',                         to: 'orden_trabajos#digital',                as: :digital
   
-  get 'post1',                     to: 'orden_trabajos#post1',                  as: :post1
-  get 'post2',                     to: 'orden_trabajos#post2',                  as: :post2
-  get 'post3',                     to: 'orden_trabajos#post3',                  as: :post3
-  get 'post4',                     to: 'orden_trabajos#post4',                  as: :post4
-  get 'post5',                     to: 'orden_trabajos#post5',                  as: :post5
-  get 'post6',                     to: 'orden_trabajos#post6',                  as: :post6
-  get 'post7',                     to: 'orden_trabajos#post7',                  as: :post7
+  get 'post1',                           to: 'orden_trabajos#post1',                  as: :post1
+  get 'post2',                           to: 'orden_trabajos#post2',                  as: :post2
+  get 'post3',                           to: 'orden_trabajos#post3',                  as: :post3
+  get 'post4',                           to: 'orden_trabajos#post4',                  as: :post4
+  get 'post5',                           to: 'orden_trabajos#post5',                  as: :post5
+  get 'post6',                           to: 'orden_trabajos#post6',                  as: :post6
+  get 'post7',                           to: 'orden_trabajos#post7',                  as: :post7
   
-  get "planificacion_taller",      to: "orden_trabajos#planificacion_taller",   as: :planificacion_taller
-  get "planificacion_tallerPDF",   to: "orden_trabajos#planificacion_tallerPDF",as: :planificacion_tallerPDF
+  get "planificacion_taller",            to: "orden_trabajos#planificacion_taller",   as: :planificacion_taller
+  get "planificacion_tallerPDF",         to: "orden_trabajos#planificacion_tallerPDF",as: :planificacion_tallerPDF
   
 end

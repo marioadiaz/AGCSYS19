@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_05_27_035419) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_30_063917) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -18,7 +18,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_27_035419) do
     t.bigint "orden_trabajo_id", null: false
     t.string "lista", null: false
     t.string "estado_interno"
-    t.string "campo2"
+    t.string "observaciones"
     t.date "fecha_list"
     t.integer "position"
     t.datetime "created_at", null: false

@@ -117,6 +117,8 @@
                 <th>Papel</th>
                 <th>Gramaje</th>
                 <th>Color</th>
+                <th>Estado</th>
+                <th>Observaciones</th>
                 <th width="90">Acciones</th>
               </tr>
 
@@ -149,9 +151,7 @@
                         end %>
                     fw-bold
                   ">
-
                     <%= ot.trnum %>
-
                   </td>
 
                   <!-- CLIENTE -->
@@ -192,17 +192,42 @@
                     <%= ot.colores %>
                   </td>
 
-                  <!-- ACCIONES -->
+                  <td>
+                    <%= form_with scope: :orden_trabajo_listas,
+                                  url: actualizar_campos_orden_trabajo_path(reg),
+                                  method: :patch,
+                                  local: false do |f| %>
+
+                      <%= f.text_field :estado_interno,
+                            value: reg.estado_interno,
+                            class: "form-control form-control-sm" %>
+                      <%= f.submit "💾", class: "btn btn-sm btn-primary mt-1" %>        
+                    <% end %>
+                  </td>
 
                   <td>
+                    <%= form_with scope: :orden_trabajo_listas,
+                                  url: actualizar_campos_orden_trabajo_path(reg),
+                                  method: :patch,
+                                  local: false do |f| %>
 
+                      <%= f.text_area :observaciones,
+                            value: reg.observaciones,
+                            rows: 2,
+                            class: "form-control form-control-sm" %>
+                      <%= f.submit "💾", class: "btn btn-sm btn-primary mt-1" %>        
+                    <% end %>
+                  </td>
+
+                  <!-- ACCIONES -->
+
+                  <td>              
                     <%= button_to quitar_lista_orden_trabajo_path(reg),
                           method: :delete,
                           class: "btn btn-danger btn-sm",
                           form: { data: { turbo_stream: true } } do %>
                       ❌ Quitar
                     <% end %>
-
                   </td>
 
                 </tr>
