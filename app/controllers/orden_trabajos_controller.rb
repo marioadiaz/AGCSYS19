@@ -184,6 +184,8 @@ class OrdenTrabajosController < ApplicationController
   end
 
   def actualizar_campos
+    Rails.logger.info params.inspect
+
     @registro = OrdenTrabajoLista.find(params[:id])
 
     permitidos = params.require(:orden_trabajo_listas)
@@ -195,6 +197,8 @@ class OrdenTrabajosController < ApplicationController
       format.turbo_stream
       format.html { redirect_back fallback_location: panel_listas_orden_trabajos_path }
     end
+    
+    head :ok
   end
 
   # POST /orden_trabajos or /orden_trabajos.json
@@ -347,6 +351,8 @@ class OrdenTrabajosController < ApplicationController
     def campos_dinamicos_permitidos
       # extraer todos los símbolos del hash CAMPOS_FORM
       campos = OrdenTrabajosHelper::CAMPOS_FORM.values.flatten(1).map(&:first)
+
+      campos += [:estado_interno, :observaciones]
 
       campos
     end
