@@ -184,21 +184,19 @@ class OrdenTrabajosController < ApplicationController
   end
 
   def actualizar_campos
-    Rails.logger.info params.inspect
-
     @registro = OrdenTrabajoLista.find(params[:id])
 
     permitidos = params.require(:orden_trabajo_listas)
-                       .permit(*campos_dinamicos_permitidos)
+                      .permit(:estado_interno, :observaciones)
 
     @registro.update(permitidos)
 
     respond_to do |format|
       format.turbo_stream
-      format.html { redirect_back fallback_location: panel_listas_orden_trabajos_path }
+      format.html do
+        redirect_back fallback_location: panel_listas_orden_trabajos_path
+      end
     end
-    
-    head :ok
   end
 
   # POST /orden_trabajos or /orden_trabajos.json

@@ -1,30 +1,33 @@
-<% ot = reg.orden_trabajo %>
-<tr id="registro_<%= reg.id %>" data-id="<%= reg.id %>" draggable="true">
-  
-  <td class="
-    <%=
-      case reg.orden_trabajo.priority
-      when 'Alta'  then 'bg-danger text-white'
-      when 'Media' then 'bg-warning'
-      else              'bg-success text-white'
-      end
-    %>">
-    <strong><%= ot.trnum %></strong>
-  </td>
+<tr id="<%= dom_id(reg) %>" data-id="<%= reg.id %>">
 
-  <td><%= link_to ot.clinom, orden_trabajo_path(ot) %></td>
+  <% ot = reg.orden_trabajo %>
 
+  <td><%= ot.trnum %></td>
+  <td><%= ot.clinom %></td>
   <td><%= ot.nomprod %></td>
-  <td><%= ot.trcan %></td>
+  <td><%= number_with_delimiter(ot.trcan) %></td>
   <td><%= ot.papel %></td>
   <td><%= ot.gramaje %></td>
   <td><%= ot.colores %></td>
+
+  <td><%= reg.estado_interno %></td>
+  <td><%= reg.observaciones %></td>
+
+  <td>
+    <button
+      class="btn btn-primary btn-sm"
+      data-bs-toggle="modal"
+      data-bs-target="#editarModal_<%= reg.id %>">
+      ✏️ Editar
+    </button>
+  </td>
+
   <td>
     <%= button_to quitar_lista_orden_trabajo_path(reg),
           method: :delete,
-          class: "btn btn-danger btn-sm",
-          form: { data: { turbo_stream: true } } do %>
+          class: "btn btn-danger btn-sm" do %>
       ❌ Quitar
     <% end %>
   </td>
+
 </tr>
