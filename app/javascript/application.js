@@ -5,6 +5,8 @@ import "controllers"
 import "custom/scroll_top"
 import "custom/buscador_datos"
 import "custom/selectpicker"
+import "custom/confirmar_form"
+import "custom/cerrar_modal"
 
 import "jquery"
 window.$ = window.jQuery = globalThis.jQuery

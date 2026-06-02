@@ -17,5 +17,7 @@ pin "@fortawesome/fontawesome-free", to: "fontawesome-free/js/all.js"
 pin "custom/scroll_top", to: "custom/scroll_top.js"
 pin "custom/buscador_datos", to: "custom/buscador_datos.js"
 pin "custom/selectpicker", to: "custom/selectpicker.js"
+pin "custom/confirmar_form", to: "custom/confirmar_form.js"
+pin "custom/cerrar_modal", to: "custom/cerrar_modal.js"
 
 pin "sortablejs" # @1.15.7
