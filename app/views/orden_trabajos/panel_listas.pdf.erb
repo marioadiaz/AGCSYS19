@@ -81,7 +81,7 @@
       vertical-align: middle;
       word-wrap: break-word;
       overflow-wrap: break-word;
-      height: 50px;
+      height: 100px;
     }
 
     /* ===================================== */
@@ -114,6 +114,10 @@
 
     .col-color{
       width: 8%;
+    }
+
+    .col-estado_interno{
+      width: 10%;
     }
 
     .col-observacion{
@@ -191,6 +195,7 @@
           <th class="col-papel">Papel</th>
           <th class="col-gramaje">Gramaje</th>
           <th class="col-color">Color</th>
+          <th class="col-estado_interno">Estado Interno</th>
           <th class="col-observacion">Observación</th>
         </tr>
       </thead>
@@ -235,7 +240,11 @@
             <td>
               <%= ot.colores %>
             </td>
-            <td>              
+            <td>
+              <%= ot.estado_interno %>
+            </td>
+            <td>
+              <%= ot.observacion %>
             </td>
 
           </tr>

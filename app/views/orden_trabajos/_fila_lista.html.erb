@@ -2,8 +2,23 @@
 
   <% ot = reg.orden_trabajo %>
 
-  <td><%= ot.trnum %></td>
-  <td><%= ot.clinom %></td>
+  <td class="
+    <%= case ot.priority
+        when 'Alta'
+             'bg-danger text-white'
+        when 'Media'
+             'bg-warning'
+        else
+             'bg-success text-white'
+        end %>
+    fw-bold"> 
+    <%= ot.trnum %>
+  </td>
+  <td>
+    <%= link_to ot.clinom,
+          orden_trabajo_path(ot),
+          class: "text-decoration-none fw-semibold" %>
+  </td>
   <td><%= ot.nomprod %></td>
   <td><%= number_with_delimiter(ot.trcan) %></td>
   <td><%= ot.papel %></td>
