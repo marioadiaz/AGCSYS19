@@ -24,9 +24,21 @@
   <td><%= ot.papel %></td>
   <td><%= ot.gramaje %></td>
   <td><%= ot.colores %></td>
-
   <td><%= reg.estado_interno %></td>
-  <td><%= reg.observaciones %></td>
+  <% if reg.lista == "Cortadora de Bobinas" %>
+    <td><%= reg.observaciones %></td>
+  <% elsif ["Laminadora Automática", "Laminadora Manual"].include?(reg.lista) %>
+    <td><%= reg.observaciones %></td>
+  <% elsif reg.lista == "Tareas Manuales" %>
+    <td><%= reg.observaciones %></td>
+  <% elsif ["Binder","Encuadernación","Zechini","Horda"].include?(reg.lista) %>
+    <td><%= reg.cantidad %></td>
+    <td><%= reg.observaciones %></td>
+  <% elsif ["Perforadora Manual","Perforadora Automática","Anilladora Automática","Anilladora Manual"].include?(reg.lista) %>
+    <td><%= reg.observaciones %></td>
+  <% else %>
+    <td><%= reg.observaciones %></td>
+  <% end %>
 
   <td>
     <button
@@ -44,5 +56,4 @@
       ❌ Quitar
     <% end %>
   </td>
-
 </tr>

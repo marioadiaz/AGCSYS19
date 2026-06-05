@@ -120,13 +120,14 @@
                 <th>Estado Interno</th>
                 <% if lista == "Cortadora de Bobinas" %>
                   <th>Cant Pliegos, Corte, Medida. Gramaje, Marca</th>
-                <% elsif ["Laminadora Automática", "Laminadora Manual"].include?(lista) %>
+                <% elsif ["Laminadora Automática","Laminadora Manual"].include?(lista) %>
                   <th>Tipo de laminado / Tamaño de pliego</th>
                 <% elsif lista == "Tareas Manuales" %>
                   <th>Tareas</th>
                 <% elsif ["Binder","Encuadernación","Zechini","Horda"].include?(lista) %>
                   <th>Cantidad</th>  
-                <% elsif ["Perforadora Manual", "Perforadora Automática"].include?(lista) %>
+                  <th>Observaciones / Fecha entrega</th>
+                <% elsif ["Perforadora Manual","Perforadora Automática","Anilladora Automática","Anilladora Manual"].include?(lista) %>
                   <th>Tipo Perforación</th>      
                 <% else %>
                   <th>Observaciones / Fecha entrega</th>
@@ -185,19 +186,20 @@
                   <!-- ESTADO INTERNO -->
                   <td><%= reg.estado_interno %></td>
                   <!-- OBSERVACIONES -->
-                  <td><%= reg.observaciones %></td>
+                  
                   <% if lista == "Cortadora de Bobinas" %>
-                    <th>Cant Pliegos, Corte, Medida. Gramaje, Marca</th>
-                  <% elsif ["Laminadora Automática", "Laminadora Manual"].include?(lista) %>
-                    <th>Tipo de laminado / Tamaño de pliego</th>
+                    <td><%= reg.observaciones %></td>
+                  <% elsif ["Laminadora Automática","Laminadora Manual"].include?(lista) %>
+                    <td><%= reg.observaciones %></td>
                   <% elsif lista == "Tareas Manuales" %>
-                    <th>Tareas</th>
+                    <td><%= reg.observaciones %></td>
                   <% elsif ["Binder","Encuadernación","Zechini","Horda"].include?(lista) %>
-                    <th>Cantidad</th>  
-                  <% elsif ["Perforadora Manual", "Perforadora Automática"].include?(lista) %>
-                    <th>Tipo Perforación</th>      
+                    <td><%= reg.cantidad %></td>
+                    <td><%= reg.observaciones %></td>
+                  <% elsif ["Perforadora Manual","Perforadora Automática","Anilladora Automática","Anilladora Manual"].include?(lista) %>
+                    <td><%= reg.observaciones %></td>
                   <% else %>
-                    <th>Observaciones / Fecha entrega</th>
+                    <td><%= reg.observaciones %></td>
                   <% end %>
                   
                   <!-- EDITAR -->
