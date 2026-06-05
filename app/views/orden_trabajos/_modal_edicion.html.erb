@@ -27,8 +27,7 @@
 
           <!-- Estado -->
           <div class="mb-3">
-            <%= f.label :estado_interno, "Estado", class: "form-label fw-bold" %>
-
+            
             <%= f.select :estado_interno,
                   ["En Espera",
                    "En Proceso",
@@ -72,9 +71,17 @@
                       class: "form-control" %>
               </div>
 
+              <div class="col-md-8">
+                <%= f.text_area :observaciones,
+                      value: reg.observaciones,
+                      placeholder: "Observaciones / Fecha de entrega",
+                      rows: 3,
+                      class: "form-control" %>
+              </div>
+
             </div>
                     
-          <% elsif ["Perforadora Manual", "Perforadora Automática"].include?(reg.lista) %>
+          <% elsif ["Perforadora Manual","Perforadora Automática","Anilladora Automática","Anilladora Manual"].include?(reg.lista) %>
 
             <div class="row">
 
@@ -94,7 +101,7 @@
               </div>
 
             </div>
-
+            
           <% else %>
 
             <%= f.text_area :observaciones,

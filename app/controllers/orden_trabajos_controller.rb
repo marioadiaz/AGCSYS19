@@ -187,7 +187,7 @@ class OrdenTrabajosController < ApplicationController
     @registro = OrdenTrabajoLista.find(params[:id])
 
     permitidos = params.require(:orden_trabajo_listas)
-                      .permit(:estado_interno, :observaciones)
+                      .permit(:estado_interno, :observaciones, :cantidad)
 
     @registro.update(permitidos)
 

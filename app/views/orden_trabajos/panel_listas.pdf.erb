@@ -1,263 +1,294 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
+  <head>
+    <meta charset="utf-8">
 
-  <style>
+    <style>
 
-    body{
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 10px;
-      margin: 0;
-      padding: 0;
-    }
+      body{
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 10px;
+        margin: 0;
+        padding: 0;
+      }
 
-    .page{
-      page-break-after: always;
-    }
+      .page{
+        page-break-after: always;
+      }
 
-    .header{
-      margin-bottom: 15px;
-      padding-bottom: 10px;
-    }
+      .header{
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+      }
 
-    .title{
-      font-size: 22px;
-      font-weight: bold;
-      text-align: center;
-      margin-bottom: 5px;
-    }
+      .title{
+        font-size: 22px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 5px;
+      }
 
-    .subtitle{
-      text-align: center;
-      font-size: 12px;
-      color: #555;
-    }
+      .subtitle{
+        text-align: center;
+        font-size: 12px;
+        color: #555;
+      }
 
-    .info{
-      margin-top: 10px;
-      font-size: 10px;
-    }
+      .info{
+        margin-top: 10px;
+        font-size: 10px;
+      }
 
-    .lista-title{
-      background: #0d6efd;
-      color: white;
-      padding: 8px;
-      font-size: 18px;
-      font-weight: bold;
-      text-align: center;
-      margin-bottom: 12px;
-    }
+      .lista-title{
+        background: #0d6efd;
+        color: white;
+        padding: 8px;
+        font-size: 18px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 12px;
+      }
 
-    .titulo-lista{
-      background: #0d6efd;
-      color: white;
-      text-align: center;
-      padding: 8px;
-      font-size: 18px;
-      font-weight: bold;
-      margin-bottom: 12px;
-    }
+      .titulo-lista{
+        background: #0d6efd;
+        color: white;
+        text-align: center;
+        padding: 8px;
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 12px;
+      }
 
-    table{
-      width: 100%;
-      border-collapse: collapse;
-      table-layout: fixed;
-    }
+      table{
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+      }
 
-    th{
-      background: #212529;
-      color: white;
-      border: 1px solid #000;
-      padding: 4px;
-      text-align: center;
-      font-size: 10px;
-    }
+      th{
+        background: #212529;
+        color: white;
+        border: 1px solid #000;
+        padding: 4px;
+        text-align: center;
+        font-size: 10px;
+      }
 
-    td{
-      border: 1px solid #000;
-      padding: 3px;
-      text-align: center;
-      vertical-align: middle;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-      height: 250px;
-    }
+      td{
+        border: 1px solid #000;
+        padding: 3px;
+        text-align: center;
+        vertical-align: middle;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        height: 200px;
+      }
 
-    /* ===================================== */
-    /* ANCHO DE COLUMNAS */
-    /* ===================================== */
+      /* ===================================== */
+      /* ANCHO DE COLUMNAS */
+      /* ===================================== */
 
-    .col-ot{
-      width: 5%;
-    }
+      .col-ot{
+        width: 5%;
+      }
 
-    .col-cliente{
-      width: 20%;
-    }
+      .col-cliente{
+        width: 20%;
+      }
 
-    .col-producto{
-      width: 15%;
-    }
+      .col-producto{
+        width: 10%;
+      }
 
-    .col-cantidad{
-      width: 7%;
-    }
+      .col-cantidad{
+        width: 7%;
+      }
 
-    .col-papel{
-      width: 12%;
-    }
+      .col-papel{
+        width: 10%;
+      }
 
-    .col-gramaje{
-      width: 7%;
-    }
+      .col-gramaje{
+        width: 7%;
+      }
 
-    .col-color{
-      width: 8%;
-    }
+      .col-color{
+        width: 8%;
+      }
 
-    .col-estado_interno{
-      width: 10%;
-    }
+      .col-estado_interno{
+        width: 5%;
+      }
 
-    .col-observacion{
-      width: 26%;
-    }
+      .col-cantidad{
+        width: 5%;
+      }
 
-    /* ===================================== */
-    /* PRIORIDADES */
-    /* ===================================== */
+      .col-observacion{
+        width: 26%;
+      }
 
-    .alta{
-      background: #dc3545;
-      color: white;
-      font-weight: bold;
-    }
+      .col-campos_manuales{
+        width: 5%;
+      }
 
-    .media{
-      background: #ffc107;
-      font-weight: bold;
-    }
+      /* ===================================== */
+      /* PRIORIDADES */
+      /* ===================================== */
 
-    .baja{
-      background: #198754;
-      color: white;
-      font-weight: bold;
-    }
-  </style>
-</head>
+      .alta{
+        background: #dc3545;
+        color: white;
+        font-weight: bold;
+      }
 
-<body>
+      .media{
+        background: #ffc107;
+        font-weight: bold;
+      }
 
-<% @listas.each do |lista| %>
+      .baja{
+        background: #198754;
+        color: white;
+        font-weight: bold;
+      }
+    </style>
+  </head>
 
-  <% registros = @registros_por_lista[lista] || [] %>
+  <body>
 
-  <% next if registros.empty? %>
+  <% @listas.each do |lista| %>
 
-  <div class="page">
+    <% registros = @registros_por_lista[lista] || [] %>
 
-    <!-- HEADER -->
+    <% next if registros.empty? %>
 
-    <div class="header">
+    <div class="page">
 
-      <div class="title">
-        AGCSYS19
+      <!-- HEADER -->2
+
+      <div class="header">
+
+        <div class="title">
+          AGCSYS19
+        </div>
+
+        <div class="subtitle">
+          Panel de Órdenes de Trabajo por Lista
+        </div>
+
+        <div class="info">
+          Fecha:
+          <strong>
+            <%= Time.current.strftime("%d/%m/%Y %H:%M") %>
+          </strong>
+        </div>
+
       </div>
 
-      <div class="subtitle">
-        Panel de Órdenes de Trabajo por Lista
+      <!-- TITULO LISTA -->
+
+      <div class="lista-title">
+        LISTA: <%= lista %>
       </div>
 
-      <div class="info">
-        Fecha:
-        <strong>
-          <%= Time.current.strftime("%d/%m/%Y %H:%M") %>
-        </strong>
-      </div>
+      <table>
 
-    </div>
-
-    <!-- TITULO LISTA -->
-
-    <div class="lista-title">
-      LISTA: <%= lista %>
-    </div>
-
-    <table>
-
-      <thead>
-        <tr>
-          <th class="col-ot">OT</th>
-          <th class="col-cliente">Cliente</th>
-          <th class="col-producto">Producto</th>
-          <th class="col-cantidad">Cantidad</th>
-          <th class="col-papel">Papel</th>
-          <th class="col-gramaje">Gramaje</th>
-          <th class="col-color">Color</th>
-          <th class="col-estado_interno">Estado Interno</th>
-          <th class="col-observacion">Observaciónes/Fecha entrega</th>
-        </tr>
-      </thead>
-
-      <tbody>
-
-        <% registros.each do |reg| %>
-
-          <% ot = reg.orden_trabajo %>
-
+        <thead>
           <tr>
-
-            <td class="
-              <%=
-                case ot.priority
-                when 'Alta'
-                  'alta'
-                when 'Media'
-                  'media'
-                else
-                  'baja'
-                end
-              %>
-            ">
-              <%= ot.trnum %>
-            </td>
-            <td>
-              <%= ot.clinom %>
-            </td>
-            <td>
-              <%= ot.nomprod %>
-            </td>
-            <td>
-              <%= number_with_delimiter(ot.trcan) %>
-            </td>
-            <td>
-              <%= ot.papel %>
-            </td>
-            <td>
-              <%= ot.gramaje %>
-            </td>
-            <td>
-              <%= ot.colores %>
-            </td>
-            <td>
-              <%= reg.estado_interno %>
-            </td>
-            <td>
-              <%= reg.observaciones %>
-            </td>
-
+            <th class="col-ot">OT</th>
+            <th class="col-cliente">Cliente</th>
+            <th class="col-producto">Producto</th>
+            <th class="col-cantidad">Cantidad</th>
+            <th class="col-papel">Papel</th>
+            <th class="col-gramaje">Gramaje</th>
+            <th class="col-color">Color</th>
+            <th class="col-estado_interno">Estado Interno</th>
+            <% if lista == "Cortadora de Bobinas" %>
+              <th class="col-campos_manuales">Peso inicial</th>
+              <th class="col-campos_manuales">Peso final</th>
+              <th class="col-observacion">Cant Pliegos, Corte, Medida. Gramaje, Marca</th>
+            <% elsif ["Laminadora Automática","Laminadora Manual"].include?(lista) %>
+              <th class="col-observacion">Tipo de laminado / Tamaño de pliego</th>
+            <% elsif ["Minerva Grande","Minerva Chica"].include?(lista) %>
+              <th class="col-campos_manuales">Troquelado</th>
+              <th class="col-campos_manuales">1/2 Corte</th>
+              <th class="col-campos_manuales">Stamping</th>
+              <th class="col-campos_manuales">Puntillado</th>
+              <th class="col-campos_manuales">Relieve</th>
+              <th class="col-observacion">Observaciones / Fecha entrega</th>
+            <% elsif ["Plana"].include?(lista) %>
+              <th class="col-campos_manuales">Troquealdo y/o relieve</th>
+              <th class="col-campos_manuales">Hendido</th>
+              <th class="col-campos_manuales">Puntillado</th>
+              <th class="col-observacion">Observaciones / Fecha entrega</th>
+            <% elsif ["Eterna"].include?(lista) %>
+              <th class="col-campos_manuales">Troquealdo y/o relieve</th>
+              <th class="col-campos_manuales">Hendido</th>
+              <th class="col-observacion">Observaciones / Fecha entrega</th>    
+            <% elsif lista == "Tareas Manuales" %>
+              <th class="col-observacion">Tareas</th>
+            <% elsif ["Binder","Encuadernación","Zechini","Horda"].include?(lista) %>
+              <th class="col-cantidad">Cantidad</th>
+              <th class="col-observacion">Observaciones / Fecha entrega</th>
+            <% elsif ["Perforadora Manual","Perforadora Automática"].include?(lista) %>
+              <th>Tipo Perforación</th>
+            <% else %>
+              <th class="col-observacion">Observaciones / Fecha entrega</th>
+            <% end %>
           </tr>
+        </thead>
 
-        <% end %>
+        <tbody>
 
-      </tbody>
+          <% registros.each do |reg| %>
 
-    </table>
+            <% ot = reg.orden_trabajo %>
 
-  </div>
+            <tr>
 
-<% end %>
-
-</body>
+              <td class="
+                <%=
+                  case ot.priority
+                  when 'Alta'
+                    'alta'
+                  when 'Media'
+                    'media'
+                  else
+                    'baja'
+                  end
+                %>
+              ">
+                <%= ot.trnum %>
+              </td>
+              <td><%= ot.clinom %></td>
+              <td><%= ot.nomprod %></td>
+              <td><%= number_with_delimiter(ot.trcan) %></td>
+              <td><%= ot.papel %></td>
+              <td><%= ot.gramaje %></td>
+              <td><%= ot.colores %></td>
+              <td><%= reg.estado_interno %></td>
+              <% if lista == "Cortadora de Bobinas" %>
+                <td></td>
+                <td></td>
+                <td><%= reg.observaciones %></td>
+              <% elsif ["Laminadora Automática", "Laminadora Manual"].include?(lista) %>
+                <td><%= reg.observaciones %></td>
+              <% elsif lista == "Tareas Manuales" %>
+                <td><%= reg.observaciones %></td>
+              <% elsif ["Binder","Encuadernación","Zechini","Horda"].include?(lista) %>
+                <td><%= reg.cantidad %></td>
+                <td><%= reg.observaciones %></td>
+              <% elsif ["Perforadora Manual", "Perforadora Automática"].include?(lista) %>
+                <td><%= reg.observaciones %></td>
+              <% else %>
+                <td><%= reg.observaciones %></td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+  </body>
 </html>
