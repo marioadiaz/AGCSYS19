@@ -117,8 +117,20 @@
                 <th>Papel</th>
                 <th>Gramaje</th>
                 <th>Color</th>
-                <th>Estado</th>
-                <th>Observaciones</th>
+                <th>Estado Interno</th>
+                <% if lista == "Cortadora de Bobinas" %>
+                  <th>Cant Pliegos, Corte, Medida. Gramaje, Marca</th>
+                <% elsif ["Laminadora Automática", "Laminadora Manual"].include?(lista) %>
+                  <th>Tipo de laminado / Tamaño de pliego</th>
+                <% elsif lista == "Tareas Manuales" %>
+                  <th>Tareas</th>
+                <% elsif ["Binder","Encuadernación","Zechini","Horda"].include?(lista) %>
+                  <th>Cantidad</th>  
+                <% elsif ["Perforadora Manual", "Perforadora Automática"].include?(lista) %>
+                  <th>Tipo Perforación</th>      
+                <% else %>
+                  <th>Observaciones / Fecha entrega</th>
+                <% end %>
                 <th>Editar</th>
                 <th>Acciones</th>
               </tr>
@@ -170,9 +182,24 @@
                   <td><%= ot.gramaje %></td>
                   <!-- COLOR -->
                   <td><%= ot.colores %></td>
-                  <!-- CAMPOS ADICIONALES -->
+                  <!-- ESTADO INTERNO -->
                   <td><%= reg.estado_interno %></td>
+                  <!-- OBSERVACIONES -->
                   <td><%= reg.observaciones %></td>
+                  <% if lista == "Cortadora de Bobinas" %>
+                    <th>Cant Pliegos, Corte, Medida. Gramaje, Marca</th>
+                  <% elsif ["Laminadora Automática", "Laminadora Manual"].include?(lista) %>
+                    <th>Tipo de laminado / Tamaño de pliego</th>
+                  <% elsif lista == "Tareas Manuales" %>
+                    <th>Tareas</th>
+                  <% elsif ["Binder","Encuadernación","Zechini","Horda"].include?(lista) %>
+                    <th>Cantidad</th>  
+                  <% elsif ["Perforadora Manual", "Perforadora Automática"].include?(lista) %>
+                    <th>Tipo Perforación</th>      
+                  <% else %>
+                    <th>Observaciones / Fecha entrega</th>
+                  <% end %>
+                  
                   <!-- EDITAR -->
                   <td>
                     <button

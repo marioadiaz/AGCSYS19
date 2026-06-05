@@ -1,22 +1,21 @@
 document.addEventListener("turbo:submit-end", (event) => {
   if (!event.detail.success) return;
 
-  const modalElement = document.querySelector(".modal.show");
+  const modalEl = event.target.closest(".modal");
 
-  if (modalElement) {
-    const modal = bootstrap.Modal.getInstance(modalElement);
+  if (modalEl) {
+    const modal = bootstrap.Modal.getInstance(modalEl);
 
-    if (modal) {
-      modal.hide();
-    }
+    modal.hide();
+
+    modalEl.addEventListener(
+      "hidden.bs.modal",
+      () => {
+        document.querySelectorAll(".modal-backdrop").forEach(e => e.remove());
+        document.body.classList.remove("modal-open");
+        document.body.style.removeProperty("padding-right");
+      },
+      { once: true }
+    );
   }
-
-  // Limpieza forzada
-  document.body.classList.remove("modal-open");
-
-  document.querySelectorAll(".modal-backdrop").forEach((el) => {
-    el.remove();
-  });
-
-  document.body.style.removeProperty("padding-right");
 });
