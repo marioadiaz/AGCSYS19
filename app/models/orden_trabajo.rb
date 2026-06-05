@@ -19,13 +19,13 @@ class OrdenTrabajo < ApplicationRecord
   POST = [
     "SM","PM","GTO","QUICK","SORZ","Ko","Xe","Buv","Lam",
     "Tipografia","Fidia","Baum","Duplo","C.Hilo","Binder",
-    "Zechini","Alzadora","C.Alambre","T.Manual","Otros","Guillotina","Renz"
+    "Zechini","Horda","Alzadora","C.Alambre","T.Manual","Otros","Guillotina","Renz"
   ].freeze
 
   LIST = [
     "CTP","Cortadora de Bobinas","Guillotina para Impresión","PM","SM 5 Cuerpos","SM 4 CUERPOS","GTO/QUICK","SORZ","Guillotina p/ Terminación",
     "Digital","Laminadora Automática","Laminadora Manual","Barnizadora","Minerva Grande","Minerva Chica",
-    "Plana","Eterna","Tareas Manuales","Dobladora","Horizon","Fidia","Duplo","Binder","Encuadernación","Zechini","Perforadora","Anilladora Automática",
+    "Plana","Eterna","Tareas Manuales","Dobladora","Horizon","Fidia","Duplo","Binder","Encuadernación","Zechini","Horda","Perforadora Manual","Perforadora Automática","Anilladora Automática",
     "Anilladora Manual","Tareas de Mantenimiento"
   ].freeze
 
