@@ -25,20 +25,19 @@
 
         <div class="modal-body">
 
-          <!-- Estado -->
-          <div class="mb-3">
-            
-            <%= f.select :estado_interno,
-                  ["En Espera",
-                   "En Proceso",
-                   "Completado",
-                   "Detenido"],
-                  { selected: reg.estado_interno },
-                  class: "form-select" %>
-          </div>
-
           <% if reg.lista == "Cortadora de Bobinas" %>
-
+            <!-- Estado Interno -->
+            <div class="mb-3">
+              
+              <%= f.select :estado_interno,
+                    ["En Espera",
+                    "En Proceso",
+                    "Completado",
+                    "Detenido"],
+                    { selected: reg.estado_interno },
+                    class: "form-select" %>
+            </div>
+                      
             <%= f.text_area :observaciones,
                   value: reg.observaciones,
                   placeholder: "Cant. Pliegos, Corte, Medida, Gramaje, Marca",
@@ -46,7 +45,17 @@
                   class: "form-control" %>
 
           <% elsif ["Laminadora Automática", "Laminadora Manual"].include?(reg.lista) %>
-
+            <!-- Estado Interno -->
+            <div class="mb-3">
+              
+              <%= f.select :estado_interno,
+                    ["En Espera",
+                    "En Proceso",
+                    "Completado",
+                    "Detenido"],
+                    { selected: reg.estado_interno },
+                    class: "form-select" %>
+            </div>        
             <%= f.text_area :observaciones,
                   value: reg.observaciones,
                   placeholder: "Tipo de laminado / Tamaño de pliego",
@@ -54,56 +63,86 @@
                   class: "form-control" %>
 
           <% elsif reg.lista == "Tareas Manuales" %>
-
+            <!-- Estado Interno -->
+            <div class="mb-3">
+              
+              <%= f.select :estado_interno,
+                    ["En Espera",
+                    "En Proceso",
+                    "Completado",
+                    "Detenido"],
+                    { selected: reg.estado_interno },
+                    class: "form-select" %>
+            </div>        
             <%= f.text_area :observaciones,
                   value: reg.observaciones,
                   placeholder: "Tareas realizadas",
                   rows: 5,
                   class: "form-control" %>
           <% elsif ["Binder","Encuadernación","Zechini","Horda"].include?(reg.lista) %>
-
-            <div class="row">
-
+            <div class="row mb-3">
+              <div class="col-md-8">
+                <%= f.select :estado_interno,
+                      ["En Espera",
+                      "En Proceso",
+                      "Completado",
+                      "Detenido"],
+                      { selected: reg.estado_interno },
+                      class: "form-select" %>
+              </div>
               <div class="col-md-4">
                 <%= f.number_field :cantidad,
                       value: reg.cantidad,
-                      placeholder: "Cantidad",
                       class: "form-control" %>
               </div>
+            </div>
 
-              <div class="col-md-8">
+            <div class="row">
+              <div class="col-12">
                 <%= f.text_area :observaciones,
                       value: reg.observaciones,
-                      placeholder: "Observaciones / Fecha de entrega",
-                      rows: 3,
+                      rows: 5,
                       class: "form-control" %>
               </div>
-
-            </div>
-                    
+            </div>                 
           <% elsif ["Perforadora Manual","Perforadora Automática","Anilladora Automática","Anilladora Manual"].include?(reg.lista) %>
-
-            <div class="row">
-
+            <div class="row mb-3">
+              <div class="col-md-8">
+                <%= f.select :estado_interno,
+                      ["En Espera",
+                      "En Proceso",
+                      "Completado",
+                      "Detenido"],
+                      { selected: reg.estado_interno },
+                      class: "form-select" %>
+              </div>
               <div class="col-md-4">
                 <%= f.number_field :cantidad,
                       value: reg.cantidad,
-                      placeholder: "Cantidad",
                       class: "form-control" %>
               </div>
+            </div>
 
-              <div class="col-md-8">
+            <div class="row">
+              <div class="col-12">
                 <%= f.text_area :observaciones,
                       value: reg.observaciones,
-                      placeholder: "Tipo de perforación",
-                      rows: 3,
+                      rows: 5,
                       class: "form-control" %>
               </div>
-
-            </div>
-            
+            </div>              
           <% else %>
-
+            <!-- Estado Interno -->
+            <div class="mb-3">
+              
+              <%= f.select :estado_interno,
+                    ["En Espera",
+                    "En Proceso",
+                    "Completado",
+                    "Detenido"],
+                    { selected: reg.estado_interno },
+                    class: "form-select" %>
+            </div>            
             <%= f.text_area :observaciones,
                   value: reg.observaciones,
                   placeholder: "Observaciones / Fecha de entrega",
