@@ -35,6 +35,7 @@
     <td><%= reg.cantidad %></td>
     <td><%= reg.observaciones %></td>
   <% elsif ["Perforadora Manual","Perforadora Automática","Anilladora Automática","Anilladora Manual"].include?(reg.lista) %>
+    <td><%= reg.cantidad %></td>        
     <td><%= reg.observaciones %></td>
   <% else %>
     <td><%= reg.observaciones %></td>
@@ -52,7 +53,8 @@
   <td>
     <%= button_to quitar_lista_orden_trabajo_path(reg),
           method: :delete,
-          class: "btn btn-danger btn-sm" do %>
+          class: "btn btn-danger btn-sm",
+          form: { data: { turbo_stream: true } } do %>
       ❌ Quitar
     <% end %>
   </td>

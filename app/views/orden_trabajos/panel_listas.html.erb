@@ -128,6 +128,7 @@
                   <th>Cantidad</th>  
                   <th>Observaciones / Fecha entrega</th>
                 <% elsif ["Perforadora Manual","Perforadora Automática","Anilladora Automática","Anilladora Manual"].include?(lista) %>
+                  <th>Cantidad</th>  
                   <th>Tipo Perforación</th>      
                 <% else %>
                   <th>Observaciones / Fecha entrega</th>
@@ -197,6 +198,7 @@
                     <td><%= reg.cantidad %></td>
                     <td><%= reg.observaciones %></td>
                   <% elsif ["Perforadora Manual","Perforadora Automática","Anilladora Automática","Anilladora Manual"].include?(lista) %>
+                    <td><%= reg.cantidad %></td>        
                     <td><%= reg.observaciones %></td>
                   <% else %>
                     <td><%= reg.observaciones %></td>
