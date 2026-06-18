@@ -1,8 +1,11 @@
 <%= turbo_stream.prepend(
       "tabla_lista_#{@lista_asignada.parameterize(separator: '_')}",
       partial: "orden_trabajos/fila_lista",
-      locals: {
-        reg: @registro
-      }
-    )
-%>
+      locals: { reg: @registro }
+    ) %>
+
+<%= turbo_stream.append(
+      "modales-listas",
+      partial: "orden_trabajos/modal_edicion",
+      locals: { reg: @registro }
+    ) %>

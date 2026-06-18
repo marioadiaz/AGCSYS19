@@ -229,9 +229,11 @@
             </tbody>
 
           </table>
-          <% registros.each do |reg| %>
-            <%= render "modal_edicion", reg: reg %>
-          <% end %>
+          <div id="modales-listas">
+            <% registros.each do |reg| %>
+              <%= render "modal_edicion", reg: reg %>
+            <% end %>
+          </div>
         </div>
 
       </div>
