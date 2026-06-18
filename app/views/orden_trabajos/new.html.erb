@@ -1,11 +1,10 @@
-<% content_for :title, "New orden trabajo" %>
-
-<h1>New orden trabajo</h1>
+<% content_for :title, "Nueva Orden de Trabajo" %>
 
 <%= render "form", orden_trabajo: @orden_trabajo %>
 
 <br>
-
-<div>
-  <%= link_to "Back to orden trabajos", orden_trabajos_path %>
+<div class="container text-center">
+  <%= link_to "Volver",
+      orden_trabajos_path,
+      class: "btn btn-secondary btn-lg w-25" %>
 </div>
