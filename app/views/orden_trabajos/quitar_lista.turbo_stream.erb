@@ -1,1 +1,2 @@
-<%= turbo_stream.remove "registro_#{@registro.id}" %>
+<%= turbo_stream.remove dom_id(@registro) %>
+<%= turbo_stream.remove "editarModal_#{@registro.id}" %>
