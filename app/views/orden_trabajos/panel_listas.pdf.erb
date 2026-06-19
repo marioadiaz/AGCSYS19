@@ -238,10 +238,6 @@
             <th class="col-ot">OT</th>
             <th class="col-cliente">Cliente</th>
             <th class="col-producto">Producto</th>
-            <th class="col-cantidad">Cantidad</th>
-            <th class="col-papel">Papel</th>
-            <th class="col-gramaje">Gramaje</th>
-            <th class="col-color">Color</th>
             <th class="col-estado_interno">Estado Interno</th>
             <% if lista == "Cortadora de Bobinas" %>
               <th class="col-campos_manuales">Peso inicial</th>
@@ -302,10 +298,6 @@
               </td>
               <td><%= ot.clinom %></td>
               <td><%= ot.nomprod %></td>
-              <td><%= number_with_delimiter(ot.trcan) %></td>
-              <td><%= ot.papel %></td>
-              <td><%= ot.gramaje %></td>
-              <td><%= ot.colores %></td>
               <td><%= reg.estado_interno %></td>
               <% if lista == "Cortadora de Bobinas" %>
                 <td></td>
