@@ -18,17 +18,23 @@ export default class extends Controller {
   }
 
   copy(event) {
-    const id = event.currentTarget.dataset.id
+  event.preventDefault()
 
-    fetch(`/orden_trabajos/${id}/copy`, {
-      method: "POST",
-      headers: {
-        "Accept": "text/vnd.turbo-stream.html",
-        "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content,
-        "Content-Type": "application/json"
-      },
-      body: "{}"
-    })
-  }
+  const id = event.currentTarget.dataset.id
+
+  fetch(`/orden_trabajos/${id}/copy`, {
+    method: "POST",
+    headers: {
+      "Accept": "text/vnd.turbo-stream.html",
+      "X-CSRF-Token": document.querySelector(
+        'meta[name="csrf-token"]'
+      ).content
+    }
+  })
+  .then(response => response.text())
+  .then(html => {
+    Turbo.renderStreamMessage(html)
+  })
+}
 
 }
