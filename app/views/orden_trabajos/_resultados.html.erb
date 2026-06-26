@@ -1,14 +1,40 @@
+<style>
+  .col-ot{
+    width:8%;
+  }
+
+  .col-cliente{
+      width:20%;
+  }
+
+  .col-producto{
+      width:22%;
+  }
+
+  .col-cantidad{
+      width:5%;
+  }
+
+  .col-observaciones{
+      width:30%;
+  }
+
+  .col-acciones{
+      width:10%;
+  }
+</style>
 <div class="p-2 border rounded shadow-sm">
 <% if resultados.any? %>
   <div class="table-responsive mt-3">
     <table class="table table-hover table-bordered align-middle text-center">
       <thead class="table-dark">
         <tr>
-          <th>N° OT</th>
-          <th>Cliente</th>
-          <th>Producto</th>
-          <th>Cantidad</th>
-          <th>Acciones</th>
+          <th class="col-ot">N° OT</th>
+          <th class="col-cliente">Cliente</th>
+          <th class="col-producto">Producto</th>
+          <th class="col-cantidad">Cantidad</th>
+          <th class="col-observaciones">Observaciones</th>
+          <th class="col-acciones">Acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -16,8 +42,9 @@
           <tr id="resultado_<%= ot.id %>">
             <td><span class="badge bg-primary fs-6"><%= ot.trnum %></span></td>
             <td class="fw-bold"><%= ot.clinom %></td>
-            <td><%= ot.nomprod&.truncate(40) %></td>
+            <td><%= ot.nomprod.first(20) %></td>
             <td><%= number_with_delimiter(ot.trcan) %></td>
+            <td><%= number_with_delimiter(ot.observaciones) %></td>
             <td>
               <button type="button"
                       class="btn btn-success btn-sm"
