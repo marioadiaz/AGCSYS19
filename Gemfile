@@ -15,7 +15,7 @@ gem "cssbundling-rails"        # Manejo de CSS (Bootstrap, Tailwind o Bulma)
 #jquery
 
 # --- Base de datos y servidores ---
-gem "pg", "~> 1.1"
+gem "pg", "~> 1.6"
 gem "puma", ">= 5.0"
 
 # --- Formularios y componentes UI ---
