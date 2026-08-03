@@ -3,7 +3,7 @@
   <!-- 🧮 Contador -->
   <div class="ml-3">
     <h3 class="mb-0">
-      Planilla de control:
+      Procesos :
       <button type="button" class="btn btn-dark btn-sm ms-2">
         <strong><%= @contador %></strong>
       </button>
@@ -17,7 +17,7 @@
            placeholder="Buscar trabajo...">
   </div>
   <!-- ➕ Nuevo trabajo -->
-  <div class="me-3">
+  <div class="me-3 d-none d-sm-block">
     <%= link_to '+ Nuevo trabajo', new_orden_trabajo_path, class: 'btn btn-success btn-lg' %>
   </div>
 </div>
@@ -58,7 +58,7 @@
                 when "Alta"  then "btn-danger"
                 when "Media" then "btn-warning"
                 when "Baja"  then "btn-success"
-                else              "btn-secondary" # <- gris si nil
+                else              "btn-success" # <- gris si nil
                 end %>
 
             <%= link_to orden_trabajo.trnum,
@@ -75,7 +75,7 @@
           <td>
             <%= f.select :estado_actual,
                          ["Pendiente", "Cliente", "Ismael diseño", "Edu diseño", "Miguel diseño",
-                          "Gina", "Diseño 3ro", "Control", "CTP", "Impresión", "Terminación", "Empaque"],
+                          "Gina", "Juan", "Comercial", "Diseño 3ro", "Control", "CTP", "Impresión", "Terminación", "Empaque"],
                          {}, class: "form-select form-select-sm" %>
           </td>
           <td>

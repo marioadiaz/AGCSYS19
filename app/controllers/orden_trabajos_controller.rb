@@ -187,7 +187,7 @@ class OrdenTrabajosController < ApplicationController
     @registro = OrdenTrabajoLista.find(params[:id])
 
     permitidos = params.require(:orden_trabajo_listas)
-                      .permit(:estado_interno, :observaciones, :cantidad)
+                      .permit(:estado_interno, :observaciones, :cantidad, :fecha_interna)
 
     @registro.update(permitidos)
 
@@ -350,7 +350,7 @@ class OrdenTrabajosController < ApplicationController
       # extraer todos los símbolos del hash CAMPOS_FORM
       campos = OrdenTrabajosHelper::CAMPOS_FORM.values.flatten(1).map(&:first)
 
-      campos += [:estado_interno, :observaciones]
+      campos += [:estado_interno, :observaciones, :fecha_interna]
 
       campos
     end
