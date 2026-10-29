@@ -350,7 +350,7 @@ class OrdenTrabajosController < ApplicationController
       # extraer todos los símbolos del hash CAMPOS_FORM
       campos = OrdenTrabajosHelper::CAMPOS_FORM.values.flatten(1).map(&:first)
 
-      campos += [:estado_interno, :observaciones, :fecha_interna]
+      campos += [:estado_interno, :observaciones,:fecha_interna]
 
       campos
     end

@@ -90,5 +90,5 @@ Rails.application.configure do
   #
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
-  config.hosts = ["crivelliwan.ddns.net","localhost", "lastoninas.duckdns.org","192.168.1.252","186.123.102.100"]
+  config.hosts = ["crivelliwan.ddns.net","localhost", "lastoninas.duckdns.org","192.168.1.252","186.123.102.113"]
 end
