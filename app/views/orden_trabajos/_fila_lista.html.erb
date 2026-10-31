@@ -21,9 +21,6 @@
   </td>
   <td><%= ot.nomprod %></td>
   <td><%= number_with_delimiter(ot.trcan) %></td>
-  <td><%= ot.papel %></td>
-  <td><%= ot.gramaje %></td>
-  <td><%= ot.colores %></td>
   <td><%= reg.estado_interno %></td>
   <% if reg.lista == "Cortadora de Bobinas" %>
     <td><%= reg.observaciones %></td>
@@ -40,7 +37,7 @@
   <% else %>
     <td><%= reg.observaciones %></td>
   <% end %>
-
+  <td><%= reg.fecha_interna %></td>
   <td>
     <button
       class="btn btn-primary btn-sm"

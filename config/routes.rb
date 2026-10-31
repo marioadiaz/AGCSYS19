@@ -41,6 +41,7 @@ Rails.application.routes.draw do
       post :copy          # correcta
       patch :asignar_lista  # CORRECTO
       delete :quitar_lista     # CORRECTO
+      get :editar_lista   # corregirtiempocargado
       
       patch :actualizar_campos
     end

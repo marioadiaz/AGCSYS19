@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_04_232734) do
+ActiveRecord::Schema[8.0].define(version: 2026_08_03_120325) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -24,6 +24,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_04_232734) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "cantidad"
+    t.date "fecha_interna"
     t.index ["orden_trabajo_id", "lista"], name: "index_orden_trabajo_listas_on_orden_trabajo_id_and_lista", unique: true
     t.index ["orden_trabajo_id"], name: "index_orden_trabajo_listas_on_orden_trabajo_id"
   end

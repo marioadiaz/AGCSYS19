@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-ruby "3.4.6"
+ruby "3.4.9"
 
 # --- Core Framework ---
 gem "rails", "~> 8.0.3"

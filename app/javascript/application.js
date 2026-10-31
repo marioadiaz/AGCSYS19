@@ -8,6 +8,7 @@ import "custom/selectpicker"
 import "custom/confirmar_form"
 import "custom/cerrar_modal"
 
+
 import "jquery"
 window.$ = window.jQuery = globalThis.jQuery
 import * as bootstrap from "bootstrap"
@@ -17,3 +18,4 @@ import "@fortawesome/fontawesome-free"
 document.addEventListener("turbo:load", () => {
   // console.log("✅ Turbo y Bootstrap funcionando con assets locales");
 });
+

@@ -37,13 +37,22 @@
                     { selected: reg.estado_interno },
                     class: "form-select" %>
             </div>
-                      
-            <%= f.text_area :observaciones,
-                  value: reg.observaciones,
-                  placeholder: "Cant. Pliegos, Corte, Medida, Gramaje, Marca",
-                  rows: 5,
-                  class: "form-control" %>
+            <div class="mb-3">
+              <label class="form-label fw-bold">Fecha Interna</label>
 
+              <%= f.date_field :fecha_interna,
+                    value: reg.fecha_interna,
+                    class: "form-control" %>
+            </div>
+            <div class="row">
+              <div class="col-12"          
+                <%= f.text_area :observaciones,
+                      value: reg.observaciones,
+                      placeholder: "Cant. Pliegos, Corte, Medida, Gramaje, Marca",
+                      rows: 5,
+                      class: "form-control" %>
+              </div>        
+            </div>          
           <% elsif ["Laminadora Automática", "Laminadora Manual"].include?(reg.lista) %>
             <!-- Estado Interno -->
             <div class="mb-3">
@@ -55,13 +64,23 @@
                     "Detenido"],
                     { selected: reg.estado_interno },
                     class: "form-select" %>
-            </div>        
-            <%= f.text_area :observaciones,
-                  value: reg.observaciones,
-                  placeholder: "Tipo de laminado / Tamaño de pliego",
-                  rows: 5,
-                  class: "form-control" %>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-bold">Fecha Interna</label>
 
+              <%= f.date_field :fecha_interna,
+                    value: reg.fecha_interna,
+                    class: "form-control" %>
+            </div>
+            <div class="row">
+              <div class="col-12">        
+                <%= f.text_area :observaciones,
+                      value: reg.observaciones,
+                      placeholder: "Tipo de laminado / Tamaño de pliego",
+                      rows: 5,
+                      class: "form-control" %>
+              </div>    
+            </div>        
           <% elsif reg.lista == "Tareas Manuales" %>
             <!-- Estado Interno -->
             <div class="mb-3">
@@ -73,12 +92,23 @@
                     "Detenido"],
                     { selected: reg.estado_interno },
                     class: "form-select" %>
-            </div>        
-            <%= f.text_area :observaciones,
-                  value: reg.observaciones,
-                  placeholder: "Tareas realizadas",
-                  rows: 5,
-                  class: "form-control" %>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-bold">Fecha Interna</label>
+
+              <%= f.date_field :fecha_interna,
+                    value: reg.fecha_interna,
+                    class: "form-control" %>
+            </div>
+            <div class="row">
+              <div class="col-12">        
+                <%= f.text_area :observaciones,
+                      value: reg.observaciones,
+                      placeholder: "Tareas realizadas",
+                      rows: 5,
+                      class: "form-control" %>
+              </div>        
+            </div>          
           <% elsif ["Binder","Encuadernación","Zechini","Horda"].include?(reg.lista) %>
             <div class="row mb-3">
               <div class="col-md-8">
@@ -96,7 +126,13 @@
                       class: "form-control" %>
               </div>
             </div>
+            <div class="mb-12">
+              <label class="form-label fw-bold">Fecha Interna</label>
 
+              <%= f.date_field :fecha_interna,
+                    value: reg.fecha_interna,
+                    class: "form-control" %>
+            </div>
             <div class="row">
               <div class="col-12">
                 <%= f.text_area :observaciones,
@@ -122,7 +158,13 @@
                       class: "form-control" %>
               </div>
             </div>
+            <div class="mb-12">
+              <label class="form-label fw-bold">Fecha Interna</label>
 
+              <%= f.date_field :fecha_interna,
+                    value: reg.fecha_interna,
+                    class: "form-control" %>
+            </div>
             <div class="row">
               <div class="col-12">
                 <%= f.text_area :observaciones,
@@ -142,12 +184,23 @@
                     "Detenido"],
                     { selected: reg.estado_interno },
                     class: "form-select" %>
-            </div>            
-            <%= f.text_area :observaciones,
-                  value: reg.observaciones,
-                  placeholder: "Observaciones / Fecha de entrega",
-                  rows: 5,
-                  class: "form-control" %>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-bold">Fecha Interna</label>
+
+              <%= f.date_field :fecha_interna,
+                    value: reg.fecha_interna,
+                    class: "form-control" %>
+            </div>
+            <div class="row">
+              <div class="col-12">            
+                <%= f.text_area :observaciones,
+                      value: reg.observaciones,
+                      placeholder: "Observaciones / Fecha de entrega",
+                      rows: 5,
+                      class: "form-control" %>
+              </div>
+            </div>      
 
           <% end %>
 

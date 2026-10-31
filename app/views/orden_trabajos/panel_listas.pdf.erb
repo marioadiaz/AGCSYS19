@@ -160,6 +160,11 @@
         text-align: center;
       }
 
+      .col-fecha_interna{
+        width: 7%;
+        text-align: center;
+      }
+
       /* ===================================== */
       /* PRIORIDADES */
       /* ===================================== */
@@ -265,6 +270,7 @@
             <% else %>
               <th class="col-observacion">Observaciones / Fecha entrega</th>
             <% end %>
+            <th class="col-fecha_interna">Fecha Int.</th>
           </tr>
         </thead>
 
@@ -312,6 +318,7 @@
               <% else %>
                 <td><%= reg.observaciones %></td>
               <% end %>
+              <td><%= reg.fecha_interna&.strftime("%d/%m/%Y") %></td>
             </tr>
           <% end %>
         </tbody>
