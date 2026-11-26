@@ -1,15 +1,25 @@
 class OrdenTrabajosController < ApplicationController
+  include OrdenTrabajosHelper
+  BATCH_SIZE = 50  
+
   before_action :set_orden_trabajo, only: %i[ show edit update destroy ]
 
   # GET /orden_trabajos or /orden_trabajos.json
   def index
-    @contador = OrdenTrabajo.all.count
-    @orden_trabajos = OrdenTrabajo.all.order('clinom ASC, trnum ASC')
+    @contador = OrdenTrabajo.count
+
+    @orden_trabajos, @next_cursor, @has_more =
+      obtener_lote(OrdenTrabajo.all, nil)
+
+    @procesos_por_orden = @orden_trabajos.each_with_object({}) do |orden, resultado|
+      resultado[orden.id] = cadenatovector(orden.procesos)
+    end
+
     respond_to do |format|
       format.html
       format.js
-      format.json { render json: @orden_trabajos}
-             format.pdf do
+      format.json { render json: @orden_trabajos }
+      format.pdf do
         render pdf: 'listado/pdf', pdf: 'Listado'
       end
     end
@@ -67,16 +77,74 @@ class OrdenTrabajosController < ApplicationController
 
   def buscar
     q = params[:q].to_s.strip
-    
-    @resultados =
-      if q.present?
-        OrdenTrabajo.where("trnum::text LIKE ? OR clinom ILIKE ?", "%#{q}%", "%#{q}%").limit(50)
-      else
-        []
-      end
 
-    render turbo_stream: turbo_stream.update("resultados_busqueda", partial: "orden_trabajos/resultados", locals: { resultados: @resultados })
+    scope = OrdenTrabajo.all
+
+    if q.present?
+      termino = "%#{ActiveRecord::Base.sanitize_sql_like(q)}%"
+
+      scope = scope.where(
+        "trnum::text ILIKE :termino OR clinom ILIKE :termino",
+        termino: termino
+      )
+    end
+
+    registros, cursor, hay_mas = obtener_lote(scope, nil)
+
+    render json: {
+      rows_html: render_to_string(
+        partial: "orden_trabajos/orden_trabajo_row",
+        collection: registros,
+        as: :orden_trabajo
+      ),
+      forms_html: render_to_string(
+        partial: "orden_trabajos/orden_trabajo_form",
+        collection: registros,
+        as: :orden_trabajo
+      ),
+      next_cursor: cursor,
+      has_more: hay_mas,
+      total: scope.count
+    }
   end
+  
+  def cargar_mas
+    scope = OrdenTrabajo.all
+
+    if params[:q].present?
+      termino = "%#{params[:q].strip}%"
+
+      scope = scope.where(
+        "clinom ILIKE :termino OR trnum::text ILIKE :termino",
+        termino: termino
+      )
+    end
+
+    @orden_trabajos, @next_cursor, @has_more =
+      obtener_lote(scope, params[:cursor])
+
+    rows_html = render_to_string(
+      partial: "orden_trabajos/orden_trabajo_row",
+      collection: @orden_trabajos,
+      as: :orden_trabajo,
+      formats: [:html]
+    )
+
+    forms_html = render_to_string(
+      partial: "orden_trabajos/orden_trabajo_form",
+      collection: @orden_trabajos,
+      as: :orden_trabajo,
+      formats: [:html]
+    )
+
+    render json: {
+      rows_html: rows_html,
+      forms_html: forms_html,
+      next_cursor: @next_cursor,
+      has_more: @has_more
+    }
+  end
+
 
   def asignar_lista
     @orden_trabajo = OrdenTrabajo.find(params[:id])
@@ -116,47 +184,61 @@ class OrdenTrabajosController < ApplicationController
     original = OrdenTrabajo.find(params[:id])
     @orden_trabajo = original.dup
 
-    # evitar duplicados del trnum (podés ajustar)
-    @orden_trabajo.trnum = "#{original.trnum}-C"
+    # trnum es integer: se conserva el número de la orden original.
+    @orden_trabajo.trnum = original.trnum
 
     if @orden_trabajo.save
       respond_to do |format|
         format.turbo_stream do
-          render turbo_stream: turbo_stream.after(
-            view_context.dom_id(original),          # 👈 FIX IMPORTANTE
-            partial: "orden_trabajo_row",
-            locals: { orden_trabajo: @orden_trabajo }
-          )
+          render turbo_stream: [
+            turbo_stream.after(
+              view_context.dom_id(original),
+              partial: "orden_trabajos/orden_trabajo_row",
+              locals: { orden_trabajo: @orden_trabajo }
+            ),
+            turbo_stream.append(
+              "orden_trabajo_forms",
+              partial: "orden_trabajos/orden_trabajo_form",
+              locals: { orden_trabajo: @orden_trabajo }
+            )
+          ]
         end
 
-        format.html { redirect_to orden_trabajos_path, notice: "Orden duplicada correctamente" }
+        format.html do
+          redirect_to orden_trabajos_path,
+                      notice: "Orden duplicada correctamente."
+        end
       end
     else
-      Rails.logger.error "❌ Error al duplicar: #{@orden_trabajo.errors.full_messages}"
-
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: turbo_stream.prepend(
             "flash",
             partial: "layouts/flash",
-            locals: { alert: "❌ No se pudo duplicar la orden: #{@orden_trabajo.errors.full_messages.join(', ')}" }
+            locals: {
+              alert: "No se pudo duplicar: #{@orden_trabajo.errors.full_messages.join(', ')}"
+            }
           ), status: :unprocessable_entity
         end
 
-        format.html { redirect_to orden_trabajos_path, alert: "❌ No se pudo duplicar la orden" }
+        format.html do
+          redirect_to orden_trabajos_path,
+                      alert: "No se pudo duplicar la orden."
+        end
       end
     end
   end
 
   def listado
     @proximo_vencimiento_ot = OrdenTrabajo.order('deadline ASC, clinom ASC').first(30)
-    @orden_trabajos = OrdenTrabajo.all.order('clinom ASC, trnum ASC')
+    @orden_trabajos = OrdenTrabajo.all.order(:clinom, :trnum)
     respond_to do |format|
       format.html
       format.js
       format.json { render json: @orden_trabajos}
       format.xlsx do
-        response.headers['Content-Disposition'] = 'attachment; filename="listado.xlsx"'
+      response.headers['Content-Disposition'] =
+          'attachment; filename="listado.xlsx"'
       end
       format.pdf do
         render pdf: 'listado/pdf', pdf: 'Listado',
@@ -216,31 +298,62 @@ class OrdenTrabajosController < ApplicationController
 
   # PATCH/PUT /orden_trabajos/1 or /orden_trabajos/1.json
   def update
-    @orden_trabajo = OrdenTrabajo.find(params[:id])
-    
+     @orden_trabajo = OrdenTrabajo.find(params[:id])
+
     if @orden_trabajo.update(orden_trabajo_params)
       respond_to do |format|
         format.turbo_stream do
           @context = params[:context].presence || "index"
-          render :update # usa update.turbo_stream.erb
+          render :update
         end
-        format.html { redirect_to orden_trabajo_path, notice: "Orden actualizada" }
+
+        format.html do
+          redirect_to orden_trabajo_path(@orden_trabajo),
+                      notice: "Orden actualizada correctamente."
+        end
       end
     else
       respond_to do |format|
-        format.html { render :edit, status: :unprocessable_entity }
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace(
+            view_context.dom_id(@orden_trabajo),
+            partial: "orden_trabajos/orden_trabajo_row",
+            locals: { orden_trabajo: @orden_trabajo }
+          ), status: :unprocessable_entity
+        end
+
+        format.html do
+          render :edit, status: :unprocessable_entity
+        end
       end
     end
   end
 
   # DELETE /orden_trabajos/1 or /orden_trabajos/1.json
   def destroy
-    @orden_trabajo = OrdenTrabajo.find(params[:id])
-    @orden_trabajo.destroy
-
     respond_to do |format|
-      format.turbo_stream
-      format.html { redirect_to orden_trabajos_path, notice: "Orden eliminada correctamente." }
+      if @orden_trabajo.destroy
+        format.turbo_stream do
+          render turbo_stream: [
+            turbo_stream.remove(
+              view_context.dom_id(@orden_trabajo)
+            ),
+            turbo_stream.remove(
+              "edit_orden_trabajo_#{@orden_trabajo.id}"
+            )
+          ]
+        end
+
+        format.html do
+          redirect_to orden_trabajos_path,
+                      notice: "Orden eliminada correctamente."
+        end
+      else
+        format.html do
+          redirect_to orden_trabajos_path,
+                      alert: "No se pudo eliminar la orden."
+        end
+      end
     end
   end
 
@@ -317,6 +430,66 @@ class OrdenTrabajosController < ApplicationController
   end
 
   private
+
+    def obtener_lote(scope, cursor)
+      consulta = scope
+        .order(
+          Arel.sql("clinom ASC NULLS LAST"),
+          Arel.sql("trnum ASC NULLS LAST"),
+          :id
+        )
+
+      if cursor.present?
+        datos = JSON.parse(
+          Base64.urlsafe_decode64(cursor)
+        )
+
+        consulta = consulta.where(
+          condicion_cursor(datos),
+          clinom: datos["clinom"],
+          trnum: datos["trnum"],
+          id: datos["id"]
+        )
+      end
+
+      registros = consulta.limit(BATCH_SIZE + 1).to_a
+
+      hay_mas = registros.size > BATCH_SIZE
+      registros = registros.first(BATCH_SIZE)
+
+      siguiente_cursor =
+        if hay_mas && registros.any?
+          ultima = registros.last
+
+          Base64.urlsafe_encode64(
+            {
+              clinom: ultima.clinom,
+              trnum: ultima.trnum,
+              id: ultima.id
+            }.to_json,
+            padding: false
+          )
+        end
+
+      [registros, siguiente_cursor, hay_mas]
+    end
+
+    def condicion_cursor(datos)
+      condicion_trnum =
+        if datos["trnum"].nil?
+          "trnum IS NULL AND id > :id"
+        else
+          "(trnum > :trnum OR trnum IS NULL OR
+          (trnum = :trnum AND id > :id))"
+        end
+
+      if datos["clinom"].nil?
+        "clinom IS NULL AND (#{condicion_trnum})"
+      else
+        "(clinom > :clinom OR clinom IS NULL OR
+        (clinom = :clinom AND (#{condicion_trnum})))"
+      end
+    end
 
     def cargar_listas
       @listas = OrdenTrabajo::LIST

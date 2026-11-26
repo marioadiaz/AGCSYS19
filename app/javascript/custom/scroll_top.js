@@ -13,5 +13,5 @@ document.addEventListener("turbo:load", () => {
   window.topFunction = function() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
-  // console.log("✅ scroll_top.js cargado correctamente");
+  console.log("✅ scroll_top.js cargado correctamente");
 });
