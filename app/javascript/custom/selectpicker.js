@@ -10,11 +10,12 @@ document.addEventListener("turbo:load", () => {
 
     // ✅ Inicializa el Bootstrap Select
     $select.selectpicker();
+    
 
     // 🎯 Evento de cambio de selección
     $select.on("changed.bs.select", function() {
       const seleccion = $(this).val() || [];
-      // console.log("Procesos seleccionados:", seleccion);
+      console.log("Procesos seleccionados:", seleccion);
 
       // Actualiza el campo oculto para enviarlo al servidor
       $("#" + hiddenId).val(seleccion.join(","));

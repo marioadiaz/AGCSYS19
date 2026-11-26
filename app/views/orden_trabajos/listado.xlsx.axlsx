@@ -1,0 +1,21 @@
+wb = xlsx_package.workbook
+
+wb.add_worksheet(name: "Listado") do |sheet|
+
+  # Encabezados
+  sheet.add_row [
+    "Cliente",
+    "Número de OT",
+    "Fecha de vencimiento"
+  ]
+
+  # Datos
+  @orden_trabajos.each do |orden|
+    sheet.add_row [
+      orden.clinom,
+      orden.trnum,
+      orden.deadline
+    ]
+  end
+
+end

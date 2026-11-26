@@ -1,0 +1,6 @@
+<% form_id = "edit_orden_trabajo_#{orden_trabajo.id}" %>
+
+<%= form_with model: orden_trabajo, id: form_id,
+              data: { action: "turbo:submit-end->orden-trabajo#actualizado" } do %>
+  <%= hidden_field_tag :context, "index" %>
+<% end %>

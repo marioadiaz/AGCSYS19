@@ -1,75 +1,145 @@
+<% orden = orden_trabajo %>
+<% form_id = "edit_orden_trabajo_#{orden.id}" %>
 
-  <tr id="<%= dom_id(@orden_trabajo) %>">
-    <%= form_with model: @orden_trabajo,
-                  remote: true,
-                  data: { action: "turbo:submit-end->orden-trabajo#actualizado" } do |f| %>
+<% color_class =
+     case orden.priority
+     when "Alta"  then "btn-danger"
+     when "Media" then "btn-warning"
+     when "Baja"  then "btn-success"
+     else "btn-secondary"
+     end %>
 
-      <!-- OT -->
-      <td class="text-center">
-            <% color_class =
-                case orden_trabajo.priority
-                when "Alta"  then "btn-danger"  # rojo
-                when "Media" then "btn-warning" # amarillo
-                else              "btn-success" # verde
-                end %>
+<% estados = [
+  "Pendiente",
+  "Cliente",
+  "Ismael diseño",
+  "Edu diseño",
+  "Miguel diseño",
+  "Gina",
+  "Juan",
+  "Comercial",
+  "Diseño 3ro",
+  "Control",
+  "CTP",
+  "Impresión",
+  "Terminación",
+  "Empaque"
+] %>
 
-            <%= link_to orden_trabajo.trnum,
-            "#",
-            class: "btn btn-sm #{color_class}",
-            data: {
-              action: "click->orden-trabajo#copy",
-              id: orden_trabajo.id
-            } %>
-      </td>
-      <td><%= link_to @orden_trabajo.clinom, orden_trabajo_path(@orden_trabajo) %></td>
-      <td><%= @orden_trabajo.nomprod.first(30) %></td>
-      <td><%= @orden_trabajo.trcan %></td>
-      <td>
-        <%= f.select :estado_actual,
-                     ["Pendiente", "Cliente", "Ismael diseño", "Edu diseño", "Miguel diseño",
-                      "Gina", "Diseño 3ro", "Control", "CTP", "Impresión", "Terminación", "Empaque"],
-                     {}, class: "form-select form-select-sm" %>
-      </td>
-      <td>
-        <%= f.text_field :procesos,
-                         value: @orden_trabajo.procesos,
-                         class: "form-control form-control-sm",
-                         disabled: true %>           
-      </td>
-      <td>
-        <%= f.date_field :fecentr,
-                         value: @orden_trabajo.fecentr,
-                         class: "form-control form-control-sm" %>
-      </td>
-      <td>
-        <%= f.select :priority,
-                         ["Alta", "Media", "Baja"],
-                         { include_blank: false },
-                         class: "form-select form-select-sm" %>
-      </td>
-      <td>
-        <%= f.text_field :observaciones,
-                         value: @orden_trabajo.observaciones,
-                         placeholder: "Observaciones",
-                         class: "form-control form-control-sm",
-                         size: 20 %>
-      </td>
-      <td class="text-center">
-        <%= f.submit "✅ Ok",
-                         class: "btn btn-primary btn-sm",
-                         data: { orden_trabajo_target: "submitButton" } %>
-      </td>
-      <td class="text-center">
-        <%= link_to orden_trabajo_path(@orden_trabajo),
-                    data: {
-                      turbo_method: :delete,
-                      turbo_confirm: "¿Eliminar esta orden?"
-                    },
-                    class: "btn btn-danger btn-sm" do %>
-          <i class="fa-solid fa-trash"></i>
-        <% end %>
-      </td>
+<% procesos_seleccionados = cadenatovector(orden.procesos) %>
+
+<tr id="<%= dom_id(orden) %>"
+    data-actualizado="false">
+
+  <%# OT: el número es entero y se conserva al duplicar %>
+  <td class="text-center">
+    <%= link_to orden.trnum || "S/N",
+                "#",
+                class: "btn btn-sm #{color_class}",
+                data: {
+                  action: "click->orden-trabajo#copy",
+                  url: copy_orden_trabajo_path(orden)
+                } %>
+  </td>
+
+  <%# Cliente %>
+  <td>
+    <%= link_to orden.clinom,
+                orden_trabajo_path(orden) %>
+  </td>
+
+  <%# Producto %>
+  <td>
+    <%= orden.nomprod.to_s.first(30) %>
+  </td>
+
+  <%# Cantidad %>
+  <td>
+    <%= orden.trcan %>
+  </td>
+
+  <%# Estado actual %>
+  <td>
+    <%= select_tag "orden_trabajo[estado_actual]",
+                   options_for_select(estados, orden.estado_actual),
+                   class: "form-select form-select-sm",
+                   form: form_id %>
+  </td>
+
+  
+  <%# Procesos %>
+  <td>
+    <%= select_tag "procesos_selector_#{orden.id}",
+                  options_for_select(
+                    OrdenTrabajo::POST.map { |p| [p, p] },
+                    procesos_seleccionados
+                  ),
+                  multiple: true,
+                  class: "selectpicker",
+                  title: "Procesos",
+                  form: form_id,
+                  data: {
+                    live_search: true,
+                    width: "100%",
+                    hidden_id: "hidden_procesos_#{orden.id}"
+                  } %>
+
+    <%= hidden_field_tag "orden_trabajo[procesos]",
+                        orden.procesos,
+                        id: "hidden_procesos_#{orden.id}",
+                        form: form_id %>
+  </td>
+
+  <%# Fecha de entrega %>
+  <td>
+    <%= date_field_tag "orden_trabajo[deadline]",
+                       orden.deadline,
+                       class: "form-control form-control-sm",
+                       form: form_id %>
+  </td>
+
+  <%# Prioridad %>
+  <td>
+    <%= select_tag "orden_trabajo[priority]",
+                   options_for_select(
+                     [["Sel. Prioridad", ""], "Alta", "Media", "Baja"],
+                     orden.priority
+                   ),
+                   class: "form-select form-select-sm",
+                   form: form_id %>
+  </td>
+
+  <%# Observaciones %>
+  <td>
+    <%= text_field_tag "orden_trabajo[observaciones]",
+                       orden.observaciones,
+                       placeholder: "Observaciones",
+                       class: "form-control form-control-sm",
+                       form: form_id %>
+  </td>
+
+  <!-- Confirmar -->
+  <td class="text-center">
+    <%= button_tag "Confirmar",
+          type: "submit",
+          class: "btn btn-primary btn-sm",
+          form: form_id,
+          data: {
+            orden_trabajo_target: "submitButton",
+            original_text: "Confirmar"
+          } %>
+  </td>
+
+  <%# Eliminar %>
+  <td class="text-center">
+    <%= link_to orden_trabajo_path(orden),
+                data: {
+                  turbo_method: :delete,
+                  turbo_confirm: "¿Eliminar esta orden?"
+                },
+                class: "btn btn-danger btn-sm" do %>
+      <i class="fa-solid fa-trash"></i>
     <% end %>
-  </tr>
+  </td>
 
-
+</tr>

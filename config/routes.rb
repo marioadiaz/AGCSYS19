@@ -9,7 +9,8 @@ Rails.application.routes.draw do
   resources :orden_trabajos do
     # ---- RUTAS COLLECTION (sin ID) -------------------------
     collection do
-
+      
+      get :cargar_mas
       get  :buscar
 
       get  :panel_listas
