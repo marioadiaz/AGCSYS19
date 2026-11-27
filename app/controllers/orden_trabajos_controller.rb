@@ -42,11 +42,12 @@ class OrdenTrabajosController < ApplicationController
   def panel_listas
     @listas = OrdenTrabajo::LIST
 
-    # Agrupar registros por lista
-    @registros_por_lista = OrdenTrabajoLista
-                             .includes(:orden_trabajo)
-                             .order(:position)
-                             .group_by(&:lista)
+    @registros_por_lista =
+      OrdenTrabajoLista
+        .where(lista: @listas)
+        .includes(:orden_trabajo)
+        .order(:lista, :position, :id)
+        .group_by(&:lista)
   end
 
   def panel_listas_pdf
@@ -268,16 +269,30 @@ class OrdenTrabajosController < ApplicationController
   def actualizar_campos
     @registro = OrdenTrabajoLista.find(params[:id])
 
-    permitidos = params.require(:orden_trabajo_listas)
-                      .permit(:estado_interno, :observaciones, :cantidad, :fecha_interna)
+    campos_permitidos = OrdenTrabajoLista
+                          .campos_editables_para(@registro.lista)
+                          .map { |campo| campo[:atributo] }
 
-    @registro.update(permitidos)
+    atributos = params
+                  .require(:orden_trabajo_listas)
+                  .permit(*campos_permitidos)
 
-    respond_to do |format|
-      format.turbo_stream
-      format.html do
-        redirect_back fallback_location: panel_listas_orden_trabajos_path
-      end
+    if @registro.update(atributos)
+
+      render turbo_stream: turbo_stream.replace(
+        view_context.dom_id(@registro),
+        partial: "orden_trabajos/fila_lista",
+        locals: { reg: @registro }
+      )
+
+    else
+
+      render turbo_stream: turbo_stream.replace(
+        view_context.dom_id(@registro),
+        partial: "orden_trabajos/fila_lista",
+        locals: { reg: @registro }
+      ), status: :unprocessable_entity
+
     end
   end
 
