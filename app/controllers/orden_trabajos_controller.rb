@@ -282,7 +282,10 @@ class OrdenTrabajosController < ApplicationController
       render turbo_stream: turbo_stream.replace(
         view_context.dom_id(@registro),
         partial: "orden_trabajos/fila_lista",
-        locals: { reg: @registro }
+        locals: {
+          reg: @registro,
+          guardado: true
+        }
       )
 
     else
@@ -290,7 +293,10 @@ class OrdenTrabajosController < ApplicationController
       render turbo_stream: turbo_stream.replace(
         view_context.dom_id(@registro),
         partial: "orden_trabajos/fila_lista",
-        locals: { reg: @registro }
+        locals: {
+          reg: @registro,
+          guardado: false
+        }
       ), status: :unprocessable_entity
 
     end
