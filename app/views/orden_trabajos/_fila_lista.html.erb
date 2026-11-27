@@ -76,14 +76,20 @@
     </td>
   <% end %>
 
-  <%# Guardar %>
+  <%# Guardar / Confirmación %>
   <td>
     <button type="submit"
             form="<%= form_id %>"
-            class="btn btn-success btn-sm"
-            title="Guardar cambios">
-      <i class="bi bi-floppy"></i>
-      Guardar
+            class="btn <%= local_assigns[:guardado] ? 'btn-secondary' : 'btn-success' %> btn-sm"
+            title="<%= local_assigns[:guardado] ? 'Cambios guardados' : 'Guardar cambios' %>">
+
+      <% if local_assigns[:guardado] %>
+        ✅ Ok
+      <% else %>
+        <i class="bi bi-floppy"></i>
+        Guardar
+      <% end %>
+
     </button>
   </td>
 
