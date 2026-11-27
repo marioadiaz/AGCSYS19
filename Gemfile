@@ -75,3 +75,5 @@ end
 
 # --- Compatibilidad con Windows ---
 gem "tzinfo-data", platforms: %i[windows jruby]
+
+gem "json", "< 3"

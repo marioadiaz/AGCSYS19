@@ -1,58 +1,101 @@
+<% ot = reg.orden_trabajo %>
+<% campos = OrdenTrabajoLista.campos_editables_para(reg.lista) %>
+<% form_id = "editar_lista_#{reg.id}" %>
+
 <tr id="<%= dom_id(reg) %>" data-id="<%= reg.id %>">
 
-  <% ot = reg.orden_trabajo %>
-
-  <td class="
+  <%# Número de orden y formulario asociado %>
+  <td class="fw-bold
     <%= case ot.priority
-        when 'Alta'
-             'bg-danger text-white'
-        when 'Media'
-             'bg-warning'
-        else
-             'bg-success text-white'
-        end %>
-    fw-bold"> 
+        when 'Alta' then 'bg-danger text-white'
+        when 'Media' then 'bg-warning'
+        else 'bg-success text-white'
+        end %>">
+
+    <%= form_with model: reg,
+          url: actualizar_campos_orden_trabajo_path(reg),
+          method: :patch,
+          id: form_id,
+          data: { turbo_stream: true } do %>
+    <% end %>
+
     <%= ot.trnum %>
+    <% if reg.errors.any? %>
+      <div class="text-danger small">
+        <%= reg.errors.full_messages.to_sentence %>
+      </div>
+    <% end %>
   </td>
+
+  <%# Cliente %>
   <td>
     <%= link_to ot.clinom,
           orden_trabajo_path(ot),
           class: "text-decoration-none fw-semibold" %>
   </td>
+
+  <%# Producto %>
   <td><%= ot.nomprod %></td>
+
+  <%# Cantidad original de la orden %>
   <td><%= number_with_delimiter(ot.trcan) %></td>
-  <td><%= reg.estado_interno %></td>
-  <% if reg.lista == "Cortadora de Bobinas" %>
-    <td><%= reg.observaciones %></td>
-  <% elsif ["Laminadora Automática", "Laminadora Manual"].include?(reg.lista) %>
-    <td><%= reg.observaciones %></td>
-  <% elsif reg.lista == "Tareas Manuales" %>
-    <td><%= reg.observaciones %></td>
-  <% elsif ["Binder","Encuadernación","Zechini","Horda"].include?(reg.lista) %>
-    <td><%= reg.cantidad %></td>
-    <td><%= reg.observaciones %></td>
-  <% elsif ["Perforadora Manual","Perforadora Automática","Anilladora Automática","Anilladora Manual"].include?(reg.lista) %>
-    <td><%= reg.cantidad %></td>        
-    <td><%= reg.observaciones %></td>
-  <% else %>
-    <td><%= reg.observaciones %></td>
+
+  <%# Campos editables específicos de la lista %>
+  <% campos.each do |campo| %>
+    <td>
+      <% if campo[:atributo] == :estado_interno %>
+
+        <%= select_tag "orden_trabajo_listas[estado_interno]",
+            options_for_select(
+              [
+                "En Espera",
+                "En Proceso",
+                "Completado",
+                "Detenido"
+              ],
+              reg.estado_interno
+            ),
+            class: "form-select form-select-sm",
+            form: form_id %>
+
+      <% elsif campo[:tipo] == :date %>
+
+        <%= date_field_tag "orden_trabajo_listas[#{campo[:atributo]}]",
+            reg.public_send(campo[:atributo]),
+            class: "form-control form-control-sm",
+            form: form_id %>
+
+      <% else %>
+
+        <%= text_field_tag "orden_trabajo_listas[#{campo[:atributo]}]",
+            reg.public_send(campo[:atributo]),
+            class: "form-control form-control-sm",
+            form: form_id %>
+
+      <% end %>
+    </td>
   <% end %>
-  <td><%= reg.fecha_interna %></td>
+
+  <%# Guardar %>
   <td>
-    <button
-      class="btn btn-primary btn-sm"
-      data-bs-toggle="modal"
-      data-bs-target="#editarModal_<%= reg.id %>">
-      ✏️ Editar
+    <button type="submit"
+            form="<%= form_id %>"
+            class="btn btn-success btn-sm"
+            title="Guardar cambios">
+      <i class="bi bi-floppy"></i>
+      Guardar
     </button>
   </td>
 
+  <%# Quitar de la lista %>
   <td>
     <%= button_to quitar_lista_orden_trabajo_path(reg),
           method: :delete,
           class: "btn btn-danger btn-sm",
           form: { data: { turbo_stream: true } } do %>
-      ❌ Quitar
+      <i class="bi bi-x-circle"></i>
+      Quitar
     <% end %>
   </td>
+
 </tr>
