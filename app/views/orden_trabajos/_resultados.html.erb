@@ -1,70 +1,118 @@
 <style>
-  .col-ot{
-    width:8%;
+  .col-ot {
+    width: 8%;
   }
 
-  .col-cliente{
-      width:20%;
+  .col-cliente {
+    width: 20%;
   }
 
-  .col-producto{
-      width:22%;
+  .col-producto {
+    width: 22%;
   }
 
-  .col-cantidad{
-      width:5%;
+  .col-cantidad {
+    width: 5%;
   }
 
-  .col-observaciones{
-      width:30%;
+  .col-observaciones {
+    width: 30%;
   }
 
-  .col-acciones{
-      width:10%;
+  .col-acciones {
+    width: 10%;
+  }
+
+  /* Contenedor con desplazamiento vertical */
+  .resultados-scroll {
+    max-height: 430px;
+    overflow-y: auto;
+    overflow-x: auto;
+  }
+
+  /* Encabezado fijo */
+  .resultados-scroll thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
   }
 </style>
+
 <div class="p-2 border rounded shadow-sm">
-<% if resultados.any? %>
-  <div class="table-responsive mt-3">
-    <table class="table table-hover table-bordered align-middle text-center">
-      <thead class="table-dark">
-        <tr>
-          <th class="col-ot">N° OT</th>
-          <th class="col-cliente">Cliente</th>
-          <th class="col-producto">Producto</th>
-          <th class="col-cantidad">Cantidad</th>
-          <th class="col-observaciones">Observaciones</th>
-          <th class="col-acciones">Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% resultados.each do |ot| %>
-          <tr id="resultado_<%= ot.id %>">
-            <td><span class="badge bg-primary fs-6"><%= ot.trnum %></span></td>
-            <td class="fw-bold"><%= ot.clinom %></td>
-            <td><%= ot.nomprod.first(20) %></td>
-            <td><%= number_with_delimiter(ot.trcan) %></td>
-            <td><%= number_with_delimiter(ot.observaciones) %></td>
-            <td>
-              <button type="button"
-                      class="btn btn-success btn-sm"
-                      data-action="click->buscar-ot#asignar"
-                      data-ot-id="<%= ot.id %>">
-                <i class="fa-solid fa-check"></i> Asignar
-              </button>
-            </td>
+
+  <% if resultados.any? %>
+
+    <div class="resultados-scroll mt-3">
+
+      <table class="table table-hover table-bordered align-middle text-center">
+
+        <thead class="table-dark">
+          <tr>
+            <th class="col-ot">N° OT</th>
+            <th class="col-cliente">Cliente</th>
+            <th class="col-producto">Producto</th>
+            <th class="col-cantidad">Cantidad</th>
+            <th class="col-observaciones">Observaciones</th>
+            <th class="col-acciones">Acciones</th>
           </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
+        </thead>
 
-<% else %>
+        <tbody>
 
-  <div class="alert alert-warning mt-3 text-center" role="alert">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    No se encontraron resultados para esta búsqueda.
-  </div>
+          <% resultados.each do |ot| %>
 
-<% end %>
+            <tr id="resultado_<%= ot.id %>">
+
+              <td>
+                <span class="badge bg-primary fs-6">
+                  <%= ot.trnum %>
+                </span>
+              </td>
+
+              <td class="fw-bold">
+                <%= ot.clinom %>
+              </td>
+
+              <td>
+                <%= ot.nomprod.to_s.first(20) %>
+              </td>
+
+              <td>
+                <%= number_with_delimiter(ot.trcan) %>
+              </td>
+
+              <td>
+                <%= ot.observaciones %>
+              </td>
+
+              <td>
+                <button type="button"
+                        class="btn btn-success btn-sm"
+                        data-action="click->buscar-ot#asignar"
+                        data-ot-id="<%= ot.id %>">
+
+                  <i class="fa-solid fa-check"></i> Asignar
+
+                </button>
+              </td>
+
+            </tr>
+
+          <% end %>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  <% else %>
+
+    <div class="alert alert-warning mt-3 text-center" role="alert">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      No se encontraron resultados para esta búsqueda.
+    </div>
+
+  <% end %>
+
 </div>

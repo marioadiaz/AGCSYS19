@@ -16,12 +16,31 @@ export default class extends Controller {
 
     fetch(`/orden_trabajos/buscar?q=${encodeURIComponent(query)}&lista=${encodeURIComponent(lista)}`, {
       headers: {
-        "Accept": "text/vnd.turbo-stream.html",
+        "Accept": "application/json",
         "X-Requested-With": "XMLHttpRequest"
       }
     })
-      .then(r => r.text())
-      .then(html => Turbo.renderStreamMessage(html))
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Error HTTP ${response.status}`)
+        }
+
+        return response.json()
+      })
+      .then(data => {
+        this.resultadosTarget.innerHTML = data.resultados_html
+
+        console.log("Resultados encontrados:", data.total)
+      })
+      .catch(error => {
+        console.error("Error al buscar órdenes:", error)
+
+        this.resultadosTarget.innerHTML = `
+          <div class="alert alert-danger mt-3">
+            No se pudieron cargar los resultados. Verifica el servidor.
+          </div>
+        `
+      })
   }
 
   asignar(event) {
@@ -32,8 +51,6 @@ export default class extends Controller {
     const lista = this.hasListaTarget
       ? this.listaTarget.value.trim()
       : ""
-
-    console.log("Asignando:", otId, "a", lista)
 
     fetch(`/orden_trabajos/${otId}/asignar_lista`, {
       method: "PATCH",
@@ -47,9 +64,19 @@ export default class extends Controller {
         lista: lista
       })
     })
-      .then(r => r.text())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Error HTTP ${response.status}`)
+        }
+
+        return response.text()
+      })
       .then(html => {
         Turbo.renderStreamMessage(html)
+      })
+      .catch(error => {
+        console.error("Error al asignar la orden:", error)
+        alert("No se pudo asignar la orden. Revisa los registros del servidor.")
       })
   }
 }
