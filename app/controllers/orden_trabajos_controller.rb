@@ -92,17 +92,14 @@ class OrdenTrabajosController < ApplicationController
 
     registros, cursor, hay_mas = obtener_lote(scope, nil)
 
+    resultados_html = render_to_string(
+      partial: "orden_trabajos/resultados",
+      locals: { resultados: registros },
+      formats: [:html]
+    )
+
     render json: {
-      rows_html: render_to_string(
-        partial: "orden_trabajos/orden_trabajo_row",
-        collection: registros,
-        as: :orden_trabajo
-      ),
-      forms_html: render_to_string(
-        partial: "orden_trabajos/orden_trabajo_form",
-        collection: registros,
-        as: :orden_trabajo
-      ),
+      resultados_html: resultados_html,
       next_cursor: cursor,
       has_more: hay_mas,
       total: scope.count

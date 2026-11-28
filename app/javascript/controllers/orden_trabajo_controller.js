@@ -91,57 +91,41 @@ export default class extends Controller {
   // -------------------------------------------------------
 
   buscar() {
-    clearTimeout(this.searchTimer)
+    const query = this.hasInputTarget
+      ? this.inputTarget.value.trim()
+      : ""
 
-    this.searchTimer = setTimeout(() => {
-      this.ejecutarBusqueda()
-    }, 400)
-  }
+    const lista = this.hasListaTarget
+      ? this.listaTarget.value.trim()
+      : ""
 
-  async ejecutarBusqueda() {
-    const query = this.searchTarget.value.trim()
-
-    this.currentQuery = query
-    this.loading = false
-
-    this.nextCursorValue = ""
-    this.hasMoreValue = false
-
-    this.statusTarget.textContent = "Buscando órdenes..."
-
-    const url = new URL(
-      this.searchUrlValue,
-      window.location.origin
-    )
-
-    url.searchParams.set("q", query)
-
-    try {
-      const response = await fetch(url, {
-        headers: {
-          Accept: "application/json"
-        },
-        credentials: "same-origin"
-      })
-
-      if (!response.ok) {
-        throw new Error("Error al buscar órdenes")
+    fetch(`/orden_trabajos/buscar?q=${encodeURIComponent(query)}&lista=${encodeURIComponent(lista)}`, {
+      headers: {
+        "Accept": "application/json",
+        "X-Requested-With": "XMLHttpRequest"
       }
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Error HTTP ${response.status}`)
+        }
 
-      const data = await response.json()
+        return response.json()
+      })
+      .then(data => {
+        this.resultadosTarget.innerHTML = data.resultados_html
 
-      this.rowsTarget.innerHTML = data.rows_html
-      this.formsTarget.innerHTML = data.forms_html
+        console.log("Resultados encontrados:", data.total)
+      })
+      .catch(error => {
+        console.error("Error al buscar órdenes:", error)
 
-      this.actualizarEstado(data)
-
-      this.inicializarSelectpickers()
-
-    } catch (error) {
-      console.error(error)
-      this.statusTarget.textContent =
-        "No se pudieron cargar los resultados."
-    }
+        this.resultadosTarget.innerHTML = `
+          <div class="alert alert-danger mt-3">
+            No se pudieron cargar los resultados.
+          </div>
+        `
+      })
   }
 
   // -------------------------------------------------------
